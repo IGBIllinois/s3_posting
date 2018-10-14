@@ -1,4 +1,4 @@
-# CBC Posting
+# S3 Posting
 - Posts data to AWS S3 bucket through linux command line
 - Emails user with the location of the data
 - Generates md5sum of the file
