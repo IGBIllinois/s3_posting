@@ -1,7 +1,8 @@
 # CBC Posting
 - Posts data to AWS S3 bucket through linux command line
-
-# Installation
+- Emails user with the location of the data
+- Generates md5sum of the file
+## Installation
 - Install boto3
 ```
 pip install boto3
@@ -23,7 +24,7 @@ email:
         reply_to: 
 ```
 
-# Usage
+## Usage
 ```
 [root@compute-0 bin]# ./upload.py
 Usage: upload.py [options] arg
