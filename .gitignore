@@ -1,2 +1,3 @@
 lib/*.pyc
 config/config.yaml
+lib/__pycache__
