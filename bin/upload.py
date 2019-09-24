@@ -24,6 +24,7 @@ settings['checksum'] = False
 settings['url_expires'] = 0
 settings['cc'] = []
 
+
 posting_files = []
 file_checksums = {}
 url = {}
@@ -140,7 +141,7 @@ def main():
 		for i in posting_files:
 			checksum = functions.create_md5_checksum(i)
 			file_checksums[i] = checksum
-			functions.log("File: " + i + ", MD5 checksum: " + checksum)
+			functions.log("File: " + i + ", MD5 checksum: " + str(checksum.decode("utf-8")))
 
 	#If Dry Run is disabled, upload files and send email
 	if (options.dry_run == None):
