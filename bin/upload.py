@@ -56,7 +56,7 @@ def main():
 	#Load config file and verify it
 	cfg = config.load_config(config_file)
 	if (not config.validate_config(cfg)):
-                print ("Invalid config.yaml\n")
+		print ("Invalid config.yaml\n")
 		quit()
 
 	if (("access_key_id" in cfg['aws']) and ("secret_access_key" in cfg['aws'])):	
@@ -146,7 +146,7 @@ def main():
 	if (options.dry_run == None):
 		s3_connection = s3_posting(settings['region'],settings['access_key_id'],settings['secret_access_key'],settings['bucket'])
 	
-        	if (s3_connection.bucket_exists() != True):
+		if (s3_connection.bucket_exists() != True):
                 	functions.log("Bucket " + settings['bucket'] + " does not exist")
 	                quit()
 

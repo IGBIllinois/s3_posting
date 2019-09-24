@@ -3,9 +3,9 @@
 - Emails user with the location of the data
 - Generates md5sum of the file
 ## Installation
-- Install boto3
+- Install boto3 and validators
 ```
-pip install boto3
+pip install boto3 validators
 ```
 - Copy config/config-default.yaml to config/config.yaml
 - Edit config/config.yaml to have defaults for AWS bucket and email server
