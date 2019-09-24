@@ -4,13 +4,13 @@ import yaml
 
 def load_config(in_config_file):
         if os.path.isfile(in_config_file) == False:
-                print "Error opening settings.yaml\n";
+                print ("Error opening settings.yaml\n");
                 return False
         with open(in_config_file,'r') as ymlfile:
                 try:
                         cfg = yaml.load(ymlfile)
                 except yaml.YAMLError as exc:
-                        print "Error Parsing settings.yaml\n";
+                        print ("Error Parsing settings.yaml\n");
                         return false
         return cfg
 

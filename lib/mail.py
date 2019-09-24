@@ -40,7 +40,7 @@ def text_email(url,md5sum,expire_date):
         return text
 
 def send_email(email,cc,url,md5sum,cfg):
-	print "cc" + ", ".join(cc) + "\n"
+	print ("cc" + ", ".join(cc) + "\n")
 	expire_date = datetime.date.today() + datetime.timedelta(+cfg['aws']['url_expires'])
 	formatted_expire_date = expire_date.strftime('%Y-%m-%d')
         email_from = cfg['email']['from']

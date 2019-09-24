@@ -51,7 +51,7 @@ class s3_posting:
         	        error_code = int(e.response['Error']['Code'])
                 	functions.log("Error uploading file " + file_path + ", Error Code: " + str(error_code))
 	                return error_code
-        	print response
+        	print (response)
 	        return True
 
 	def get_url(self,filename,url_expires=0):

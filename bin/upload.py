@@ -56,7 +56,7 @@ def main():
 	#Load config file and verify it
 	cfg = config.load_config(config_file)
 	if (not config.validate_config(cfg)):
-                print "Invalid config.yaml\n"
+                print ("Invalid config.yaml\n")
 		quit()
 
 	if (("access_key_id" in cfg['aws']) and ("secret_access_key" in cfg['aws'])):	

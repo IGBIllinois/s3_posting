@@ -17,7 +17,7 @@ def create_md5_checksum(file_path):
 def log(msg):
 	now = datetime.datetime.now()
 	formatted_time = now.strftime('%Y-%m-%d %H:%M:%S')
-	print formatted_time + ": " + msg
+	print (formatted_time + ": " + msg)
 
 		
 def get_files_in_dir(path):
