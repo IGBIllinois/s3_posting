@@ -1,4 +1,5 @@
 aws:
+        endpoint_url:
         region: us-east-1
         url_expires: 30
         access_key_id: 

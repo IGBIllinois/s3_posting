@@ -1,16 +1,22 @@
 # S3 Posting
-- Posts data to AWS S3 bucket through linux command line
+- Posts data to S3 buckets through linux command line
+- Works with AWS, [https://aws.amazon.com/](https://aws.amazon.com/) and Minio, [https://min.io/](https://min.io/)
 - Emails user with the location of the data
 - Generates md5sum of the file
 ## Installation
 - Install boto3 and validators
 ```
-pip install boto3 validators
+pip install boto3 validators pyyaml
+```
+- Download Code using a tag release or git clone
+```
+git clone https://github.com/IGBIllinois/s3_posting.git
 ```
 - Copy config/config-default.yaml to config/config.yaml
 - Edit config/config.yaml to have defaults for AWS bucket and email server
 ```
 aws:
+	endpoint_url:
         region: us-east-1
         url_expires: 30
         access_key_id: 

@@ -29,11 +29,12 @@ class s3_posting:
 	
 	signature_version = "s3"
 
-	def __init__(self,region,access_key_id,secret_access_key,bucket):
+	def __init__(self,region,access_key_id,secret_access_key,bucket,endpoint_url):
 		self._region = region
 		self._access_key_id = access_key_id
 		self._secret_access_key = secret_access_key
 		self._bucket = bucket
+		self._endpoint_url = endpoint_url
 		self.connect()
 
 	def bucket_exists(self):
@@ -69,7 +70,7 @@ class s3_posting:
 
 	def connect(self):
                	try:
-                    self._connection = boto3.client('s3',self._region,aws_access_key_id=self._access_key_id,
+                    self._connection = boto3.client('s3',endpoint_url=self._endpoint_url,region_name=self._region,aws_access_key_id=self._access_key_id,
                         aws_secret_access_key=self._secret_access_key,config=Config(signature_version=self.signature_version))
                 except botocore.exceptions.ClientError as e:
                     error_code = int(e.response['Error']['Code'])

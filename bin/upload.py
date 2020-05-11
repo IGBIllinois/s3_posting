@@ -69,6 +69,9 @@ def main():
 	if ("region" in cfg['aws']):
 		settings['region'] = cfg['aws']['region']
 
+	if ("endpoint_url" in cfg['aws']):
+		settings['endpoint_url'] = cfg['aws']['endpoint_url']
+
 	#Verify -f/--files files and -d/--dir 
 	if ((options.file != None) and (options.dir != None)):
 		parser.error("--file and --dir are mutually exclusive")
@@ -145,7 +148,7 @@ def main():
 
 	#If Dry Run is disabled, upload files and send email
 	if (options.dry_run == None):
-		s3_connection = s3_posting(settings['region'],settings['access_key_id'],settings['secret_access_key'],settings['bucket'])
+		s3_connection = s3_posting(settings['region'],settings['access_key_id'],settings['secret_access_key'],settings['bucket'],settings['endpoint_url'])
 	
 		if (s3_connection.bucket_exists() != True):
                 	functions.log("Bucket " + settings['bucket'] + " does not exist")

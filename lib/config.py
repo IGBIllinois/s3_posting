@@ -8,7 +8,7 @@ def load_config(in_config_file):
                 return False
         with open(in_config_file,'r') as ymlfile:
                 try:
-                        cfg = yaml.load(ymlfile)
+                        cfg = yaml.load(ymlfile,Loader=yaml.FullLoader)
                 except yaml.YAMLError as exc:
                         print ("Error Parsing settings.yaml\n");
                         return false
