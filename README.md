@@ -5,7 +5,7 @@
 - Posts data to S3 buckets through linux command line
 - Works with AWS, [https://aws.amazon.com/](https://aws.amazon.com/) and Minio, [https://min.io/](https://min.io/)
 - Emails user with the location of the data
-- Generates md5sum of the file
+- Generates md5sum and/or sha256 checksums of the file
 ## Installation
 - Install boto3 and validators
 ```
