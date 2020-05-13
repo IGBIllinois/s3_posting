@@ -7,9 +7,10 @@ The links (URLs) will expire on {{ expire_date }}\n\n
 	File: {{item.file_name }}\n\n
 	URL: {{ item.url_link }}\n\n
 	{% if item.md5sum %}
-		md5sum: {{ item.md5sum }}\n\n
-	{% endfor %}
-        
+		md5sum: {{ item.md5sum }} \n\n
+	{% if item.sha256sum %}
+        	sha256sum: {{ item.sha256sum }} \n\n
+	{% endfor %}        
 For questions about this posting, you may reply to this email and must cc: aghernan@illinois.edu and clwright@illinois.edu\n\n
 Sincerely,\n\n
 The DNA Sequencing Lab, University of Illinois at Urbana-Champaign\n\n
