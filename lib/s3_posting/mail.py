@@ -3,9 +3,25 @@ import datetime
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from jinja2 import Environment, FileSystemLoader
 
-def html_email(url,md5sum,sha256sum,expire_date):
-        html = "<html><head></head><body>"
+class email:
+
+	subject = "Sequence files from University of Illinois DNA Sequencing Lab"
+	template_dir = "templates"
+
+	def __init__(self,email,cc,url,md5sum,sha256sum,cfg):
+		file_loader = FileSystemLoader(template_dir)
+		self.template_env = Environment(loader=file_loader)
+		self.email = email
+		self.cc = cc
+		self.url = url
+		self.md5sum = md5sum
+		self.sha256sum = sha256sum
+		self.cfg = cfg
+
+	def html_email(url,md5sum,sha256sum,expire_date):
+        	html = "<html><head></head><body>"
         html += "<p>Hi,</p>"
         html += "<p>Your sequencing results from the DNA Sequencing lab at UIUC are available for download.</p>"
         html += "<p>Below is the list of files and the link to download them.</p>"
@@ -22,7 +38,7 @@ def html_email(url,md5sum,sha256sum,expire_date):
         html += "</body></html>"
         return html
 
-def text_email(url,md5sum,sha256sum,expire_date):
+	def text_email(url,md5sum,sha256sum,expire_date):
         text = "Hi,\n\n"
         text += "Your sequencing results from the DNA Sequencing lab at UIUC are available for download.\n\n"
         text += "Below is the list of files and the link to download them.\n\n"
@@ -39,23 +55,23 @@ def text_email(url,md5sum,sha256sum,expire_date):
 
         return text
 
-def send_email(email,cc,url,md5sum,sha256sum,cfg):
-        print ("cc" + ", ".join(cc) + "\n")
-        expire_date = datetime.date.today() + datetime.timedelta(+cfg['aws']['url_expires'])
-        formatted_expire_date = expire_date.strftime('%Y-%m-%d')
-        email_from = cfg['email']['from']
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = "Sequence files from University of Illinois DNA Sequencing Lab"
-        msg['From'] = email_from
-        msg['To'] = email
-        msg['Cc'] = ", ".join(cc)
-        msg['Reply-to'] = cfg['email']['reply_to']
-        part1 = MIMEText(text_email(url,md5sum,formatted_expire_date),'text')
-        part2 = MIMEText(html_email(url,md5sum,formatted_expire_date),'html')
-        msg.attach(part1)
-        msg.attach(part2)
-        s = smtplib.SMTP(cfg['email']['smtp_server'])
-        envelop = [email] + cc
-        result = s.sendmail(email_from,envelop,msg.as_string())
-        s.quit
+	def send_email():
+        	print ("cc" + ", ".join(self.cc) + "\n")
+	        expire_date = datetime.date.today() + datetime.timedelta(+self.cfg['aws']['url_expires'])
+        	formatted_expire_date = expire_date.strftime('%Y-%m-%d')
+	        email_from = self.cfg['email']['from']
+        	msg = MIMEMultipart('alternative')
+	        msg['Subject'] = self.subject
+        	msg['From'] = email_from
+	        msg['To'] = self.email
+        	msg['Cc'] = ", ".join(self.cc)
+	        msg['Reply-to'] = self.cfg['email']['reply_to']
+        	part1 = MIMEText(self.text_email(),'text')
+	        part2 = MIMEText(self.html_email(),'html')
+        	msg.attach(part1)
+	        msg.attach(part2)
+        	s = smtplib.SMTP(self.cfg['email']['smtp_server'])
+	        envelop = [email] + self.cc
+        	result = s.sendmail(email_from,envelop,msg.as_string())
+	        s.quit
 
