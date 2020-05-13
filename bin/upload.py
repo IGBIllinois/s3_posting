@@ -8,11 +8,11 @@ from optparse import OptionParser
 root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(root_dir + "/lib")
 config_file = root_dir + "/config/config.yaml"
-import functions
 import s3_posting
+from s3_posting import functions
 from s3_posting import s3_posting
-import mail
-import config
+from s3_posting import mail
+from s3_posting import config
 
 settings = {}
 settings['bucket'] = ""

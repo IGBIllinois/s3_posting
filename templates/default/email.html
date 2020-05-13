@@ -1,0 +1,17 @@
+<html><head></head><body>
+<p>Hi,</p>
+<p>Your sequencing results from the DNA Sequencing lab at UIUC are available for download.</p>
+<p>Below is the list of files and the link to download them.</p>
+<p>The links (URLs) will expire on {{ expire_date }}</p>
+<br>
+{% for item in files %}
+<p>File: {{item.file_name }}</p>
+<p>URL: <a href=' {{ item.url_link }}'>{{ item.url_link }} </a></p>
+{% if item.md5sum %}
+	<p>md5sum: {{ item.md5sum }} </p>
+{% endfor %}
+        
+<p>For questions about this posting, you may reply to this email and must cc: aghernan@illinois.edu and clwright@illinois.edu</p>
+<p>Sincerely,</p>
+<p>The DNA Sequencing Lab, University of Illinois at Urbana-Champaign</p>
+</body></html>

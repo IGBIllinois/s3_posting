@@ -6,7 +6,7 @@
 ## Installation
 - Install boto3 and validators
 ```
-pip install boto3 validators pyyaml
+pip install boto3 validators pyyaml Jinja2
 ```
 - Download Code using a tag release or git clone
 ```
