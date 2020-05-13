@@ -9,8 +9,11 @@
 <p>URL: <a href=' {{ item.url_link }}'>{{ item.url_link }} </a></p>
 {% if item.md5sum %}
 	<p>md5sum: {{ item.md5sum }} </p>
+{% endif %}
 {% if item.sha256sum %}
         <p>sha256sum: {{ item.sha256sum }} </p>
+{% endif %}
+
 {% endfor %}
         
 <p>For questions about this posting, you may reply to this email and must cc: aghernan@illinois.edu and clwright@illinois.edu</p>

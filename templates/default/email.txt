@@ -8,9 +8,12 @@ The links (URLs) will expire on {{ expire_date }}\n\n
 	URL: {{ item.url_link }}\n\n
 	{% if item.md5sum %}
 		md5sum: {{ item.md5sum }} \n\n
+	{% endif %}
 	{% if item.sha256sum %}
         	sha256sum: {{ item.sha256sum }} \n\n
-	{% endfor %}        
+	{% endif %}
+
+{% endfor %}        
 For questions about this posting, you may reply to this email and must cc: aghernan@illinois.edu and clwright@illinois.edu\n\n
 Sincerely,\n\n
 The DNA Sequencing Lab, University of Illinois at Urbana-Champaign\n\n

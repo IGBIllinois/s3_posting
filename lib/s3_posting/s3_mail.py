@@ -13,7 +13,9 @@ class s3_mail:
 	template_html = 'email.html'
 
 	def __init__(self,email,cc,url,md5sum,sha256sum,cfg):
-		file_loader = FileSystemLoader(template_dir)
+		path = os.path.abspath(__file__)
+		dir_path = os.path.dirname(path)
+		file_loader = FileSystemLoader(dir_path + "/../../" + self.template_dir)
 		self.template_env = Environment(loader=file_loader)
 		self.email = email
 		self.cc = cc
@@ -22,24 +24,33 @@ class s3_mail:
 		self.sha256sum = sha256sum
 		self.cfg = cfg
 
-	def html_email():
+	def html_email(self):
 		template = self.template_env.get_template('default/' + self.template_html)
-		if (os.path.exists("../../templates/custom/" + self.template_html):
+		if (os.path.exists("../../templates/custom/" + self.template_html)):
 			template = self.template_env.get_template('custom/' + self.template_html)
-		output = template.render(expire_date=self.expire_date,self.url)
+		try:
+			output = template.render(expire_date=self.expire_date,url=self.url)
+		except TemplateError as e:
+			sys.exit('Syntax Error in email template ' + self.template_html)
+
 		return output
 
-	def text_email(url,md5sum,sha256sum,expire_date):
-                template = self.template_env.get_template('default/' + self.template_txt)
-                if (os.path.exists("../../templates/custom/" + self.template_txt):
-                        template = self.template_env.get_template('custom/' + self.template_txt)
-                output = template.render(expire_date=self.expire_date,self.url)
-                return output
+	def text_email(self):
+		template = self.template_env.get_template('default/' + self.template_txt)
+		if (os.path.exists("../../templates/custom/" + self.template_txt)):
+			template = self.template_env.get_template('custom/' + self.template_txt)
 
-	def send_email():
+		try:
+			output = template.render(expire_date=self.expire_date,url=self.url)
+		except TemplateError as e:
+			sys.exit('Syntax Error in email template ' + self.tempalte_txt)
+
+		return output
+
+	def send_email(self):
         	print ("cc" + ", ".join(self.cc) + "\n")
 	        self.expire_date = datetime.date.today() + datetime.timedelta(+self.cfg['aws']['url_expires'])
-        	formatted_expire_date = expire_date.strftime('%Y-%m-%d')
+        	formatted_expire_date = self.expire_date.strftime('%Y-%m-%d')
 	        email_from = self.cfg['email']['from']
         	msg = MIMEMultipart('alternative')
 	        msg['Subject'] = self.subject
@@ -52,7 +63,7 @@ class s3_mail:
         	msg.attach(part1)
 	        msg.attach(part2)
         	s = smtplib.SMTP(self.cfg['email']['smtp_server'])
-	        envelop = [email] + self.cc
+	        envelop = [self.email] + self.cc
         	result = s.sendmail(email_from,envelop,msg.as_string())
 	        s.quit
 

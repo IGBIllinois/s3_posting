@@ -138,11 +138,11 @@ def main():
 		settings['md5sum'] = True
 		functions.log("md5 checksum enabled")
 	if (options.sha256):
-		settings['sha256'] = True
+		settings['sha256sum'] = True
 		functions.log("sha256 checksum enabled")
 
 	#Calculate md5 checksums
-	if (settings['md5']):
+	if (settings['md5sum']):
 		functions.log("Calculating md5 checksums")
 		for i in posting_files:
 			checksum = functions.create_md5_checksum(i)
@@ -150,7 +150,7 @@ def main():
 			functions.log("File: " + i + ", MD5 checksum: " + str(checksum.decode("utf-8")))
 
         #Calculate sha256 checksums
-	if (settings['sha256']):
+	if (settings['sha256sum']):
 		functions.log("Calculating sha256 checksums")
 		for i in posting_files:
 			checksum = functions.create_sha256_checksum(i)
@@ -159,7 +159,7 @@ def main():
 
 	#If Dry Run is disabled, upload files and send email
 	if (options.dry_run == None):
-		s3_connection = s3_posting(settings['region'],settings['access_key_id'],settings['secret_access_key'],settings['bucket'],settings['endpoint_url'])
+		s3_connection = s3_posting.s3_posting(settings['region'],settings['access_key_id'],settings['secret_access_key'],settings['bucket'],settings['endpoint_url'])
 	
 		if (s3_connection.bucket_exists() != True):
                 	functions.log("Bucket " + settings['bucket'] + " does not exist")
@@ -180,8 +180,8 @@ def main():
 
 
 		#Send Email
-		
-		mail.send_email(options.email,settings['cc'],url,file_md5_checksums,file_sha256_checksums,cfg)	
+		mail = s3_mail.s3_mail(options.email,settings['cc'],url,file_md5_checksums,file_sha256_checksums,cfg)
+		mail.send_email()
 	elif (options.dry_run):
 		functions.log("Dry Run Enabled - Disabling uploads and email")
 
