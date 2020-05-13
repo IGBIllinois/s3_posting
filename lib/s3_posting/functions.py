@@ -3,6 +3,15 @@ import os.path
 import datetime
 import subprocess
 
+from s3_posting import __version__
+from s3_posting import __website__
+
+def get_version():
+	return __version__
+
+def get_website():
+	return __website__
+
 def create_md5_checksum(file_path):
 	cmd = "md5sum " + file_path + " | awk '{print $1}'"
 	p = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
@@ -12,7 +21,14 @@ def create_md5_checksum(file_path):
 	else:
 		return stdout 
 	
-
+def create_sha256sum_checksum(file_path):
+        cmd = "sha256sum " + file_path + " | awk '{print $1}'"
+        p = subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+        stdout,stderr = p.communicate()
+        if (p.returncode):
+                return False
+        else:
+                return stdout
 
 def log(msg):
 	now = datetime.datetime.now()

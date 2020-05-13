@@ -4,7 +4,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-def html_email(url,md5sum,expire_date):
+def html_email(url,md5sum,sha256sum,expire_date):
         html = "<html><head></head><body>"
         html += "<p>Hi,</p>"
         html += "<p>Your sequencing results from the DNA Sequencing lab at UIUC are available for download.</p>"
@@ -22,7 +22,7 @@ def html_email(url,md5sum,expire_date):
         html += "</body></html>"
         return html
 
-def text_email(url,md5sum,expire_date):
+def text_email(url,md5sum,sha256sum,expire_date):
         text = "Hi,\n\n"
         text += "Your sequencing results from the DNA Sequencing lab at UIUC are available for download.\n\n"
         text += "Below is the list of files and the link to download them.\n\n"
@@ -39,7 +39,7 @@ def text_email(url,md5sum,expire_date):
 
         return text
 
-def send_email(email,cc,url,md5sum,cfg):
+def send_email(email,cc,url,md5sum,sha256sum,cfg):
         print ("cc" + ", ".join(cc) + "\n")
         expire_date = datetime.date.today() + datetime.timedelta(+cfg['aws']['url_expires'])
         formatted_expire_date = expire_date.strftime('%Y-%m-%d')

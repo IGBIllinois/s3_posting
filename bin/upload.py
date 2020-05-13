@@ -20,13 +20,15 @@ settings['region'] = ""
 settings['access_key_id'] = None
 settings['secret_access_key'] = None
 settings['overwrite'] = False
-settings['checksum'] = False
+settings['md5sum'] = False
+settings['sha256sum'] = False
 settings['url_expires'] = 0
 settings['cc'] = []
 
 
 posting_files = []
-file_checksums = {}
+file_md5_checksums = {}
+file_sha256_checksums = {}
 url = {}
 def main():
 	
@@ -36,7 +38,9 @@ def main():
 	global url
 
 	usage = "usage: %prog [options] arg"
-	parser = OptionParser(usage)
+	description = "Posts data to S3 buckets through linux command line\n"
+	description += functions.get_website()
+	parser = OptionParser(usage=usage,description=description,version=functions.get_version())
 
 	parser.add_option("-f","--file",action='append', type="string",
 		help="Filename to upload");
@@ -45,9 +49,9 @@ def main():
 	parser.add_option("--cc",action='append', type='string',
 		help="Email address to cc");
 	parser.add_option("-b","--bucket",type='string',help="Bucket to upload to");	
-	#parser.add_option("--overwrite",action='store_true',help="Overwrite existing file");
-	parser.add_option("--checksum",action='store_true',help="Create file checksums");
-	parser.add_option("--dry-run",action='store_true',help="Dry Run.  Disable uploads and emails");
+	parser.add_option("--md5",action='store_true',help="Create md5 checksums");
+	parser.add_option("--sha256",action='store_true',help="Create sha256 checksums");
+	parser.add_option("--dry-run",action='store_true',help="Dry Run. Disable uploads and emails");
 	(options,args) = parser.parse_args()
 
 	if len(sys.argv) == 1:
@@ -131,20 +135,28 @@ def main():
 	functions.log("Bucket: " + settings['bucket'])
 	
 	
-	if (options.checksum):
-		settings['checksum'] = True
-		functions.log("Checksum enabled")
-	#if (options.overwrite):
-	#	settings['overwrite'] = True
-	#	functions.log("Overwrite enabled")
+	if (options.md5):
+		settings['md5sum'] = True
+		functions.log("md5 checksum enabled")
+	if (options.sha256):
+		settings['sha256'] = True
+		functions.log("sha256 checksum enabled")
 
-	#Calculate checksums
-	if (settings['checksum']):
-		functions.log("Calculating checksums")
+	#Calculate md5 checksums
+	if (settings['md5']):
+		functions.log("Calculating md5 checksums")
 		for i in posting_files:
 			checksum = functions.create_md5_checksum(i)
-			file_checksums[i] = checksum
+			file_md5_checksums[i] = checksum
 			functions.log("File: " + i + ", MD5 checksum: " + str(checksum.decode("utf-8")))
+
+        #Calculate sha256 checksums
+	if (settings['sha256']):
+		functions.log("Calculating sha256 checksums")
+		for i in posting_files:
+			checksum = functions.create_sha256_checksum(i)
+			file_sha256_checksums[i] = checksum
+			functions.log("File: " + i + ", SHA256 checksum: " + str(checksum.decode("utf-8")))
 
 	#If Dry Run is disabled, upload files and send email
 	if (options.dry_run == None):
@@ -170,7 +182,7 @@ def main():
 
 		#Send Email
 		
-		mail.send_email(options.email,settings['cc'],url,file_checksums,cfg)	
+		mail.send_email(options.email,settings['cc'],url,file_md5_checksums,file_sha256_checksums,cfg)	
 	elif (options.dry_run):
 		functions.log("Dry Run Enabled - Disabling uploads and email")
 
