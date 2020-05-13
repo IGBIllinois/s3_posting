@@ -37,10 +37,9 @@ def main():
 	global file_checksums
 	global url
 
-	usage = "usage: %prog [options] arg"
 	description = "Posts data to S3 buckets through linux command line\n"
 	description += functions.get_website()
-	parser = OptionParser(usage=usage,description=description,version=functions.get_version())
+	parser = OptionParser(description=description,version=functions.get_version())
 
 	parser.add_option("-f","--file",action='append', type="string",
 		help="Filename to upload");

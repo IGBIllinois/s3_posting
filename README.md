@@ -12,7 +12,7 @@ pip install boto3 validators pyyaml Jinja2
 ```
 git clone https://github.com/IGBIllinois/s3_posting.git
 ```
-- Copy config/config-default.yaml to config/config.yaml
+- Copy config/config.yaml.dist to config/config.yaml
 - Edit config/config.yaml to have defaults for AWS bucket and email server
 ```
 aws:
@@ -32,10 +32,14 @@ email:
 
 ## Usage
 ```
-[root@compute-0 bin]# ./upload.py
-Usage: upload.py [options] arg
+[root@localhost bin]# ./upload.py
+Usage: upload.py [options]
+
+Posts data to S3 buckets through linux command line
+https://github.com/IGBIllinois/s3_posting
 
 Options:
+  --version             show program's version number and exit
   -h, --help            show this help message and exit
   -f FILE, --file=FILE  Filename to upload
   -d DIR, --dir=DIR     Directory to upload
@@ -43,6 +47,7 @@ Options:
   --cc=CC               Email address to cc
   -b BUCKET, --bucket=BUCKET
                         Bucket to upload to
-  --checksum            Create file checksums
-  --dry-run             Dry Run.  Disable uploads and emails
+  --md5                 Create md5 checksums
+  --sha256              Create sha256 checksums
+  --dry-run             Dry Run. Disable uploads and emails
 ```
