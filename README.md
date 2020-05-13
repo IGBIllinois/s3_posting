@@ -1,4 +1,7 @@
 # S3 Posting
+
+[![Build Status](https://www.travis-ci.com/IGBIllinois/s3_posting.svg?branch=master)](https://www.travis-ci.com/IGBIllinois/s3_posting)
+
 - Posts data to S3 buckets through linux command line
 - Works with AWS, [https://aws.amazon.com/](https://aws.amazon.com/) and Minio, [https://min.io/](https://min.io/)
 - Emails user with the location of the data
