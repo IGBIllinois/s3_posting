@@ -1,4 +1,5 @@
 *.pyc
 config/*.yaml
 lib/s3_posting/__pycache__
-templates/custom
+templates/custom/*.html
+templates/custom/*.txt
