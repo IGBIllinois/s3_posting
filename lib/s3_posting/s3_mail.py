@@ -7,7 +7,6 @@ from jinja2 import Environment, FileSystemLoader
 
 class s3_mail:
 
-	subject = "Sequence files from University of Illinois DNA Sequencing Lab"
 	template_dir = 'templates'
 	template_txt = 'email.txt'
 	template_html = 'email.html'
@@ -19,6 +18,7 @@ class s3_mail:
 		self.template_env = Environment(loader=file_loader)
 		self.email = email
 		self.cc = cc
+		self.subject = cfg['email']['subject']
 		self.url = url
 		self.md5sum = md5sum
 		self.sha256sum = sha256sum

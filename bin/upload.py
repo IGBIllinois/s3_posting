@@ -30,6 +30,8 @@ posting_files = []
 file_md5_checksums = {}
 file_sha256_checksums = {}
 url = {}
+url2 = {}
+
 def main():
 	
 	global settings
