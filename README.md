@@ -7,9 +7,13 @@
 - Emails user with the location of the data
 - Generates md5sum and/or sha256 checksums of the file
 ## Installation
-- Install boto3 and validators
+- Install using virtualenv
 ```
-pip install boto3 validators pyyaml Jinja2
+virtualenv .env && source .env/bin/activate && pip install -r requirements.txt
+```
+- Or Install directly into python
+```
+pip install -r requirements.txt
 ```
 - Download Code using a tag release or git clone
 ```
