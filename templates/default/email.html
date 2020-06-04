@@ -6,7 +6,7 @@
 <br>
 {% for item in urls %}
 <p>File: {{item.file_name }}</p>
-<p>URL: <a href=' {{ item.url_link }}'>{{ item.url_link }} </a></p>
+<p>URL: <a href=' {{ item }}'>{{ item }} </a></p>
 {% if item.md5sum %}
 	<p>md5sum: {{ item.md5sum }} </p>
 {% endif %}

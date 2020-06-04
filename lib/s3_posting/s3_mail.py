@@ -29,7 +29,7 @@ class s3_mail:
 		if (os.path.exists("../../templates/custom/" + self.template_html)):
 			template = self.template_env.get_template('custom/' + self.template_html)
 		try:
-			output = template.render(expire_date=self.expire_date,url=self.url)
+			output = template.render(expire_date=self.expire_date,urls=self.url)
 		except TemplateError as e:
 			sys.exit('Syntax Error in email template ' + self.template_html)
 
@@ -41,7 +41,7 @@ class s3_mail:
 			template = self.template_env.get_template('custom/' + self.template_txt)
 
 		try:
-			output = template.render(expire_date=self.expire_date,url=self.url)
+			output = template.render(expire_date=self.expire_date,urls=self.url)
 		except TemplateError as e:
 			sys.exit('Syntax Error in email template ' + self.tempalte_txt)
 

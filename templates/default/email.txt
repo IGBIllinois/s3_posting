@@ -3,9 +3,9 @@ Your sequencing results from the DNA Sequencing lab at UIUC are available for do
 Below is the list of files and the link to download them.\n\n
 The links (URLs) will expire on {{ expire_date }}\n\n
 
-{% for item in files %}
+{% for item in urls %}
 	File: {{item.file_name }}\n\n
-	URL: {{ item.url_link }}\n\n
+	URL: {{ item }}\n\n
 	{% if item.md5sum %}
 		md5sum: {{ item.md5sum }} \n\n
 	{% endif %}
