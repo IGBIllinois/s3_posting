@@ -34,7 +34,8 @@ email:
         smtp_server: 
         from: 
         cc_emails: 
-        reply_to: 
+        reply_to:
+	subject: 
 ```
 
 ## Usage

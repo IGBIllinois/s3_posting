@@ -31,6 +31,7 @@ file_md5_checksums = {}
 file_sha256_checksums = {}
 url = {}
 url2 = {}
+test_url = ""
 
 def main():
 	
@@ -179,7 +180,6 @@ def main():
 			basename = os.path.basename(i)
 			url[i] = s3_connection.get_url(options.email + "/" + basename,settings['url_expires'])
 			functions.log("File: " + i + ", URL: " + url[i])
-
 
 		#Send Email
 		mail = s3_mail.s3_mail(options.email,settings['cc'],url,file_md5_checksums,file_sha256_checksums,cfg)
