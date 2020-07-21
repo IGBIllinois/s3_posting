@@ -60,14 +60,12 @@ class s3_posting:
 	                seconds = url_expires * 24 * 60 * 60
         	        url = self._connection.generate_presigned_url('get_object',Params = {
                 	        'Bucket': self._bucket,
-                        	'Key': filename,
-				'x-foo': 'test-param'},
+                        	'Key': filename},
 	                        ExpiresIn = seconds)
 		else:
                 	url = self._connection.generate_presigned_url('get_object',Params = {
                         	'Bucket': self._bucket,
-	                        'Key': filename,
-				'x-foo':' test-param'})
+	                        'Key': filename})
 
 		return url
 
