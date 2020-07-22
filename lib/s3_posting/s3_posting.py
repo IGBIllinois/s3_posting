@@ -55,17 +55,19 @@ class s3_posting:
         	print (response)
 	        return True
 
-	def get_url(self,filename,url_expires=0):
+	def get_url(self,filename,url_expires=0,custom_param=''):
 		if (url_expires != 0):
 	                seconds = url_expires * 24 * 60 * 60
         	        url = self._connection.generate_presigned_url('get_object',Params = {
                 	        'Bucket': self._bucket,
-                        	'Key': filename},
+                        	'Key': filename,
+				'x-custom': custom_param},
 	                        ExpiresIn = seconds)
 		else:
                 	url = self._connection.generate_presigned_url('get_object',Params = {
                         	'Bucket': self._bucket,
-	                        'Key': filename})
+	                        'Key': filename,
+				'x-custom': custom_param})
 
 		return url
 

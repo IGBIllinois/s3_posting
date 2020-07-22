@@ -47,12 +47,13 @@ def main():
 	parser.add_option("-f","--file",action='append', type="string",
 		help="Filename to upload");
 	parser.add_option("-d","--dir",action='append',type="string",help="Directory to upload");
-	parser.add_option("--email",type='string', help="Email to send to");
+	parser.add_option("--email",action='append',type='string', help="Email to send to");
 	parser.add_option("--cc",action='append', type='string',
 		help="Email address to cc");
 	parser.add_option("-b","--bucket",type='string',help="Bucket to upload to");	
 	parser.add_option("--md5",action='store_true',help="Create md5 checksums");
 	parser.add_option("--sha256",action='store_true',help="Create sha256 checksums");
+	parser.add_option("-m","--metadata",action='append',type='string',help="Key/values metadata to add to object");
 	parser.add_option("--dry-run",action='store_true',help="Dry Run. Disable uploads and emails");
 	(options,args) = parser.parse_args()
 
@@ -178,9 +179,8 @@ def main():
 		for i in posting_files:
 			s3_connection.upload_file(i,options.email)
 			basename = os.path.basename(i)
-			url[i] = s3_connection.get_url(options.email + "/" + basename,settings['url_expires'])
+			url[i] = s3_connection.get_url(options.email + "/" + basename,settings['url_expires'],'test1');
 			functions.log("File: " + i + ", URL: " + url[i])
-
 		#Send Email
 		mail = s3_mail.s3_mail(options.email,settings['cc'],url,file_md5_checksums,file_sha256_checksums,cfg)
 		mail.send_email()
