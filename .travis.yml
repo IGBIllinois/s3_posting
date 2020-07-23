@@ -3,7 +3,8 @@ python:
     - "3.6"
     - "3.7"
 
-
+install: 
+   - pip install -r requirements.txt
 
 script:
     - if find . -name "*.py" -exec python -c "__import__('compiler').parse(open('{}').read())" 2>&1 \; | grep "SyntaxError"; then exit 1; fi

@@ -54,6 +54,7 @@ def main():
 	parser.add_option("--md5",action='store_true',help="Create md5 checksums");
 	parser.add_option("--sha256",action='store_true',help="Create sha256 checksums");
 	parser.add_option("-m","--metadata",action='append',type='string',help="Key/values metadata to add to object");
+	parser.add_option("--overwrite",action='store_true',help="Force overwrite of existing object");
 	parser.add_option("--dry-run",action='store_true',help="Dry Run. Disable uploads and emails");
 	(options,args) = parser.parse_args()
 
