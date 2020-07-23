@@ -45,15 +45,19 @@ class s3_posting:
         	return False
 
 	def upload_file(self,file_path,directory):
-        	basename = os.path.basename(file_path);
-	        try:
-        	        response = self._connection.upload_file(file_path,self._bucket,directory + "/" + basename,Callback=ProgressPercentage(file_path))
-	        except botocore.exceptions.ClientError as e:
+		basename = os.path.basename(file_path);
+		if (directory != None):
+			full_path = directory + "/" + basename
+		else:
+			full_path = basename
+		try:
+        	        response = self._connection.upload_file(file_path,self._bucket,full_path,Callback=ProgressPercentage(file_path))
+		except botocore.exceptions.ClientError as e:
         	        error_code = int(e.response['Error']['Code'])
                 	functions.log("Error uploading file " + file_path + ", Error Code: " + str(error_code))
 	                return error_code
-        	print (response)
-	        return True
+		print (response)
+		return True
 
 	def get_url(self,filename,url_expires=0,custom_param=''):
 		if (url_expires != 0):
@@ -84,22 +88,27 @@ class s3_posting:
                 return True
 
 	def create_directory(self,directory):
-        	try:
-	                response = self._connection.put_object(Bucket=self._bucket,Key=directory + "/")
-        	except botocore.exceptions.ClientError as e:
-                	error_code = int(e.response['Error']['Code'])
-	                functions.log("Error Creating Directory " + directory + ", Error Code: " + str(error_code))
-        	        return error_code
-	        return True
+		if (directory != None):
+	        	try:
+		                response = self._connection.put_object(Bucket=self._bucket,Key=directory + "/")
+        		except botocore.exceptions.ClientError as e:
+                		error_code = int(e.response['Error']['Code'])
+		                functions.log("Error Creating Directory " + directory + ", Error Code: " + str(error_code))
+        		        return error_code
+	        	return True
+		
 
 	def directory_exists(self,directory):
-        	try:
-                	response = self._connection.list_objects(Bucket=self._bucket,Prefix=directory + "/")
-	        except botocore.exceptions.ClientError as e:
-        	        error_code = int(e.response['Error']['Code'])
-                	functions.log("Error Checking Directory " + directory + ", Error Code: " + str(error_code))
+		if (directory != None):
+	        	try:
+        	        	response = self._connection.list_objects_v2(Bucket=self._bucket,Prefix=directory + "/")
+	        	except botocore.exceptions.ClientError as e:
+        	        	error_code = int(e.response['Error']['Code'])
+	                	functions.log("Error Checking Directory " + directory + ", Error Code: " + str(error_code))
 
-	        return 'Contents' in response
+		        return 'Contents' in response
+		else:
+			return True	
 
 
 	# To add custom parameters to presigned url

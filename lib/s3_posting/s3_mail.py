@@ -11,13 +11,12 @@ class s3_mail:
 	template_txt = 'email.txt'
 	template_html = 'email.html'
 
-	def __init__(self,email,cc,url,md5sum,sha256sum,cfg):
+	def __init__(self,email,url,md5sum,sha256sum,cfg):
 		path = os.path.abspath(__file__)
 		dir_path = os.path.dirname(path)
 		file_loader = FileSystemLoader(dir_path + "/../../" + self.template_dir)
 		self.template_env = Environment(loader=file_loader)
 		self.email = email
-		self.cc = cc
 		self.subject = cfg['email']['subject']
 		self.url = url
 		self.md5sum = md5sum
@@ -48,22 +47,27 @@ class s3_mail:
 		return output
 
 	def send_email(self):
-        	print ("cc" + ", ".join(self.cc) + "\n")
-	        self.expire_date = datetime.date.today() + datetime.timedelta(+self.cfg['aws']['url_expires'])
-        	formatted_expire_date = self.expire_date.strftime('%Y-%m-%d')
-	        email_from = self.cfg['email']['from']
-        	msg = MIMEMultipart('alternative')
-	        msg['Subject'] = self.subject
-        	msg['From'] = email_from
-	        msg['To'] = self.email
-        	msg['Cc'] = ", ".join(self.cc)
-	        msg['Reply-to'] = self.cfg['email']['reply_to']
-        	part1 = MIMEText(self.text_email(),'text')
-	        part2 = MIMEText(self.html_email(),'html')
-        	msg.attach(part1)
-	        msg.attach(part2)
-        	s = smtplib.SMTP(self.cfg['email']['smtp_server'])
-	        envelop = [self.email] + self.cc
-        	result = s.sendmail(email_from,envelop,msg.as_string())
-	        s.quit
+		if (self.cfg['email']['cc_emails'] != None):
+			print ("cc: " + self.cfg['email']['cc_emails'] + "\n")
+		self.expire_date = datetime.date.today() + datetime.timedelta(+self.cfg['aws']['url_expires'])
+		formatted_expire_date = self.expire_date.strftime('%Y-%m-%d')
+		email_from = self.cfg['email']['from']
+		msg = MIMEMultipart('alternative')
+		msg['Subject'] = self.subject
+		msg['From'] = email_from
+		msg['To'] = ''.join(self.email)
+		if (self.cfg['email']['cc_emails'] != None):
+			msg['Cc'] = self.cfg['email']['cc_emails']
+		if (self.cfg['email']['reply_to'] != None):
+			msg['Reply-to'] = self.cfg['email']['reply_to']
+		part1 = MIMEText(self.text_email(),'text')
+		part2 = MIMEText(self.html_email(),'html')
+		msg.attach(part1)
+		msg.attach(part2)
+		s = smtplib.SMTP(self.cfg['email']['smtp_server'])
+		envelop = [self.email]
+		if (self.cfg['email']['cc_emails'] != None):
+			envelop += self.cfg['email']['cc_emails'].split(",")
+		result = s.sendmail(email_from,envelop,msg.as_string())
+		s.quit
 

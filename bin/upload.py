@@ -23,15 +23,13 @@ settings['overwrite'] = False
 settings['md5sum'] = False
 settings['sha256sum'] = False
 settings['url_expires'] = 0
-settings['cc'] = []
-
+settings['subfolder'] = None
 
 posting_files = []
 file_md5_checksums = {}
 file_sha256_checksums = {}
 url = {}
 url2 = {}
-test_url = ""
 
 def main():
 	
@@ -44,13 +42,11 @@ def main():
 	description += functions.get_website()
 	parser = OptionParser(description=description,version=functions.get_version())
 	parser.add_option("-p","--profile",type="string",help="Profile to use");
-	parser.add_option("-f","--file",action='append', type="string",
-		help="Filename to upload");
+	parser.add_option("-f","--file",action='append', type="string",help="Filename to upload");
 	parser.add_option("-d","--dir",action='append',type="string",help="Directory to upload");
-	parser.add_option("--email",action='append',type='string', help="Email to send to");
-	parser.add_option("--cc",action='append', type='string',
-		help="Email address to cc");
-	parser.add_option("-b","--bucket",type='string',help="Bucket to upload to");	
+	parser.add_option("-e","--email",action='append',type='string', help="Email to send to");
+	parser.add_option("-b","--bucket",type='string',help="Bucket to upload to");
+	parser.add_option("-s","--subfolder",type='string',help="Folder to place object in");	
 	parser.add_option("--md5",action='store_true',help="Create md5 checksums");
 	parser.add_option("--sha256",action='store_true',help="Create sha256 checksums");
 	parser.add_option("-m","--metadata",action='append',type='string',help="Key/values metadata to add to object");
@@ -108,23 +104,26 @@ def main():
 				else:
 					posting_files.extend(result)
 	
+	if (options.subfolder != None):
+		cfg['subfolder'] = options.subfolder
+		
 	#Verify -email
 	if (options.email == None):
 		parser.error("Must specifiy an email address with --email")
 		quit(1)
-	elif (not config.validate_email(options.email)):
-		parser.error("Invalid email " + options.email)
-		quit(1)
-
-	#Verify -cc
-	if (options.cc != None):
-		for i in options.cc:
+	else:
+		for i in options.email:
 			if (not config.validate_email(i)):
 				parser.error("Invalid email " + i)
 				quit(1)
-		settings['cc'] = settings['cc'] + options.cc
-	
-	settings['cc'] = settings['cc'] + cfg['email']['cc_emails'].split(', ')
+
+	#Verify cc emails
+	if (cfg['email']['cc_emails'] != None):
+		for i in cfg['email']['cc_emails']:
+			if (not config.validate_email(i)):
+				parser.error("Invalid cc email " + i)
+				quit(1)
+		settings['cc'] = cfg['email']['cc_emails']
 
 	#Verify -b/--bucket
 	if ((options.bucket == None) and cfg['aws']['default_bucket'] == None):
@@ -169,7 +168,7 @@ def main():
                 	functions.log("Bucket " + settings['bucket'] + " does not exist")
 	                quit()
 
-		if not s3_connection.directory_exists(options.email):
+		if not s3_connection.directory_exists(settings['subfolder']):
 			functions.log("Directory " + options.email + " does not exist.  Creating Directory")
 			s3_connection.create_directory(options.email)
 
@@ -177,12 +176,16 @@ def main():
 
 		#Upload Files
 		for i in posting_files:
-			s3_connection.upload_file(i,options.email)
+			s3_connection.upload_file(i,settings['subfolder'])
 			basename = os.path.basename(i)
-			url[i] = s3_connection.get_url(options.email + "/" + basename,settings['url_expires'],'test1');
+			if (settings['subfolder'] != None):
+				full_path = settings['subfolder'] + "/" + basename
+			else:
+				full_path = basename
+			url[i] = s3_connection.get_url(basename,settings['url_expires'],'test1');
 			functions.log("File: " + i + ", URL: " + url[i])
 		#Send Email
-		mail = s3_mail.s3_mail(options.email,settings['cc'],url,file_md5_checksums,file_sha256_checksums,cfg)
+		mail = s3_mail.s3_mail(options.email,url,file_md5_checksums,file_sha256_checksums,cfg)
 		mail.send_email()
 	elif (options.dry_run):
 		functions.log("Dry Run Enabled - Disabling uploads and email")
