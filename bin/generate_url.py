@@ -36,12 +36,12 @@ def main():
 	description += functions.get_website()
 	parser = OptionParser(description=description,version=functions.get_version())
 	parser.add_option("-p","--profile",type="string",help="Profile to use");
-	parser.add_option("-f","--file",action='append', type="string",help="Filename to upload");
-	parser.add_option("-d","--dir",action='append',type="string",help="Directory to upload");
+	parser.add_option("-f","--file",action='append', type="string",help="Filename to generate URL");
+	parser.add_option("-d","--dir",action='append',type="string",help="Directory to generate URL");
 	parser.add_option("-e","--email",action='append',type='string', help="Email to send to");
-	parser.add_option("-b","--bucket",type='string',help="Bucket to upload to");
+	parser.add_option("-b","--bucket",type='string',help="Bucket to use");
 	parser.add_option("-s","--subfolder",type='string',help="Folder to place object in");	
-	parser.add_option("--dry-run",action='store_true',help="Dry Run. Disable uploads and emails");
+	parser.add_option("--dry-run",action='store_true',help="Dry Run. Disable generate URL and emails");
 	(options,args) = parser.parse_args()
 
 	if len(sys.argv) == 1:
