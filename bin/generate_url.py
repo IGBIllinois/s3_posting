@@ -32,7 +32,7 @@ def main():
 	global file_checksums
 	global url
 
-	description = "Posts data to S3 buckets through linux command line\n"
+	description = "Generates Download URL for existing objects\n"
 	description += functions.get_website()
 	parser = OptionParser(description=description,version=functions.get_version())
 	parser.add_option("-p","--profile",type="string",help="Profile to use");
