@@ -19,15 +19,10 @@ settings['bucket'] = ""
 settings['region'] = ""
 settings['access_key_id'] = None
 settings['secret_access_key'] = None
-settings['overwrite'] = False
-settings['md5sum'] = False
-settings['sha256sum'] = False
 settings['url_expires'] = 0
 settings['subfolder'] = None
 
 posting_files = []
-file_md5_checksums = {}
-file_sha256_checksums = {}
 url = {}
 
 def main():
@@ -46,9 +41,6 @@ def main():
 	parser.add_option("-e","--email",action='append',type='string', help="Email to send to");
 	parser.add_option("-b","--bucket",type='string',help="Bucket to upload to");
 	parser.add_option("-s","--subfolder",type='string',help="Folder to place object in");	
-	parser.add_option("--md5",action='store_true',help="Create md5 checksums");
-	parser.add_option("--sha256",action='store_true',help="Create sha256 checksums");
-	parser.add_option("-m","--metadata",action='append',type='string',help="Key/values metadata to add to object");
 	parser.add_option("--dry-run",action='store_true',help="Dry Run. Disable uploads and emails");
 	(options,args) = parser.parse_args()
 
@@ -136,30 +128,9 @@ def main():
 	functions.log("Bucket: " + settings['bucket'])
 	
 	
-	if (options.md5):
-		settings['md5sum'] = True
-		functions.log("md5 checksum enabled")
-	if (options.sha256):
-		settings['sha256sum'] = True
-		functions.log("sha256 checksum enabled")
 
-	#Calculate md5 checksums
-	if (settings['md5sum']):
-		functions.log("Calculating md5 checksums")
-		for i in posting_files:
-			checksum = functions.create_md5_checksum(i)
-			file_md5_checksums[i] = checksum
-			functions.log("File: " + i + ", MD5 checksum: " + str(checksum.decode("utf-8")))
 
-        #Calculate sha256 checksums
-	if (settings['sha256sum']):
-		functions.log("Calculating sha256 checksums")
-		for i in posting_files:
-			checksum = functions.create_sha256_checksum(i)
-			file_sha256_checksums[i] = checksum
-			functions.log("File: " + i + ", SHA256 checksum: " + str(checksum.decode("utf-8")))
-
-	#If Dry Run is disabled, upload files and send email
+	#If Dry Run is disabled, generate url and send email
 	if (options.dry_run == None):
 		s3_connection = s3_posting.s3_posting(settings['region'],settings['access_key_id'],settings['secret_access_key'],settings['bucket'],settings['endpoint_url'])
 	
@@ -169,13 +140,11 @@ def main():
 
 		if not s3_connection.directory_exists(settings['subfolder']):
 			functions.log("Directory " + options.email + " does not exist.  Creating Directory")
-			s3_connection.create_directory(options.email)
 
 
 
-		#Upload Files
+		#Generate URL
 		for i in posting_files:
-			s3_connection.upload_file(i,settings['subfolder'])
 			basename = os.path.basename(i)
 			if (settings['subfolder'] != None):
 				full_path = settings['subfolder'] + "/" + basename
