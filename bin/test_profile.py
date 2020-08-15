@@ -7,28 +7,10 @@ from optparse import OptionParser
 
 root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(root_dir + "/lib")
-config_file = root_dir + "/config/config.yaml"
+
 import s3_posting
-from s3_posting import functions
-from s3_posting import s3_posting
-from s3_posting import s3_mail
 from s3_posting import profile
-
-settings = {}
-settings['bucket'] = ""
-settings['region'] = ""
-settings['access_key_id'] = None
-settings['secret_access_key'] = None
-settings['overwrite'] = False
-settings['md5sum'] = False
-settings['sha256sum'] = False
-settings['url_expires'] = 0
-settings['subfolder'] = None
-
-posting_files = []
-file_md5_checksums = {}
-file_sha256_checksums = {}
-url = {}
+from s3_posting import functions
 
 def main():
 	
@@ -37,7 +19,18 @@ def main():
 	global file_checksums
 	global url
 
-	my_profile = profile.profile(config_file)
+	description = "Tests Profile for proper formatting\n"
+	description += functions.get_website()
+	parser = OptionParser(description=description,version=functions.get_version())
+	parser.add_option("-p","--profile",type="string",help="Profile to use");
+	(options,args) = parser.parse_args()
+
+	if len(sys.argv) == 1:
+		parser.print_help()
+		quit(1)
+
+	profile_file = root_dir + "/config/" + options.profile + ".yaml"	
+	my_profile = profile.profile(profile_file)
 	
 
 if __name__ == '__main__':

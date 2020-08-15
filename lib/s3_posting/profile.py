@@ -30,14 +30,14 @@ class profile:
 
 	def __init__(self,profile_file):
 		if os.path.isfile(profile_file) == False:
-			print ("Error opening " + profile_file + "\n");
-			return False
+			print ("Error " + profile_file + " does not exist");
+			exit(1)
 		with open(profile_file,'r') as ymlfile:
 			try:
 				self.__cfg = yaml.load(ymlfile,Loader=yaml.FullLoader)
 			except yaml.YAMLError as exc:
-				print ("Error Parsing " + profile_file + "\n")
-				return false
+				print ("Error Parsing " + profile_file)
+				exit(1)
 
 			try:
 				with open(self.__profile_schema,'r') as f:
@@ -45,8 +45,10 @@ class profile:
 					jsonschema.validate(self.__cfg,schema)
 
 			except jsonschema.exceptions.ValidationError as exc:
-				print ("Error Validating " + profile_file + "\n")
-				print (print(exc))
+				print ("Error Validating " + profile_file)
+				print(exc.message)
+				exit(1)
+
 			self.__profile_file = profile_file
 
 	def get_endpoint_url(self):

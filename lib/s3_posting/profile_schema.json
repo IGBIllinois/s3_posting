@@ -17,7 +17,8 @@
 					]
 			 	}
 		},
-		"additionalProperties": false
+		"additionalProperties": false,
+		"required": ["endpoint_url","region","access_key_id","secret_access_key"] 
 	      },
 	      "email": {
         	"type": "object",
@@ -30,7 +31,10 @@
 			"subject": { "type": "string" },
 			"seperate_emails": { "type": ["boolean","null"] }
 		},
-		"additionalProperties": false
+		"additionalProperties": false,
+		"required": ["enable"]
       	      }
-       }
+       },
+	"additionalProperties": false,
+	"required": ["aws","email"]
 }
