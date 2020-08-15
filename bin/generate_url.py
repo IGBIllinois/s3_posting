@@ -12,7 +12,6 @@ import s3_posting
 from s3_posting import functions
 from s3_posting import s3_posting
 from s3_posting import s3_mail
-from s3_posting import config
 
 settings = {}
 settings['bucket'] = ""
