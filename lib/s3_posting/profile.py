@@ -1,6 +1,8 @@
 import os.path
 import validators
 import yaml
+import json
+import jsonschema
 
 class profile:
 
@@ -15,14 +17,6 @@ class profile:
 	__secret_access_key = ""
 	__bucket = ""
 	__storage_class = "STANDARD"
-	__valid_storage_classes = {'STANDARD',
-			'REDUCED_REDUNDANCY',
-			'STANDARD_IA',
-			'ONEZONE_IA',
-			'INTELLIGENT_TIERING',
-			'GLACIER',
-			'DEEP_ARCHIVE'
-			}
 	__email_enable = True
 	__smtp_server = ""
 	__email_from = ""
@@ -30,6 +24,7 @@ class profile:
 	__reply_to = ""
 	__subject = ""
 	__seperate_emails = False	
+	__profile_schema = os.path.dirname(__file__) + "/profile_schema.json"
 
 ##########Public Functions#########
 
@@ -41,8 +36,17 @@ class profile:
 			try:
 				self.__cfg = yaml.load(ymlfile,Loader=yaml.FullLoader)
 			except yaml.YAMLError as exc:
-				print ("Error Parsing " + profile_file + "\n");
+				print ("Error Parsing " + profile_file + "\n")
 				return false
+
+			try:
+				with open(self.__profile_schema,'r') as f:
+					schema = json.load(f)
+					jsonschema.validate(self.__cfg,schema)
+
+			except jsonschema.exceptions.ValidationError as exc:
+				print ("Error Validating " + profile_file + "\n")
+				print (print(exc))
 			self.__profile_file = profile_file
 
 	def get_endpoint_url(self):
@@ -92,7 +96,37 @@ class profile:
 
 ##########Private Functions###########
 	def __load_profile(self):
-		return False
+		if ("endpoint_url" in __cfg['aws']):
+			__endpoint_url = __cfg['aws']['endpoint_url']
+		if ("region" in __cfg['aws']):
+			__region = __cfg['aws']['region']
+		if ("url_expires" in __cfg['aws']):
+			__url_expires = __cfg['aws']['url_expires']
+		if ("access_key_id" in __cfg['aws']):
+			__access_key_id = __cfg['aws']['access_key_id']
+		if ("secret_access_key" in __cfg['aws']):
+			__secret_access_key = __cfg['aws']['secret_access_key']
+		if ("default_bucket" in __cfg['aws']):
+			___bucket = __cfg['aws']['default_bucket']
+		if ("enable_url" in __cfg['aws']):
+			__enable_url = __cfg['aws']['enable_url']
+		if ("storage_class" in __cfg['aws']):
+			__storage_class = __cfg['aws']['storage_class']
+		if ("enable" in __cfg['email']):
+			__enable_email = __cfg['email']['enable']
+		if ("smtp_server" in __cfg['email']):
+			__smtp_server = __cfg['email']['smtp_server']
+		if ("from" in __cfg['email']):
+			__email_from = __cfg['email']['from']
+		if ("cc_emails" in __cfg['email']):
+			__cc_emails = __cfg['email']['cc_emails']
+		if ("reply_to" in __cfg['email']):
+			__reply_to = __cfg['email']['reply_to']
+		if ("subject" in __cfg['subject']):
+			__subject = __cfg['email']['subject']
+		if ("seperate_emails" in __cfg['email']):
+			__seperate_emails = __cfg['email']['seperate_emails']
+
 	def __validate_config(in_cfg):
 		success = True
 		if (('region' not in in_cfg['aws']) or (in_cfg['aws']['region'] == None)):
