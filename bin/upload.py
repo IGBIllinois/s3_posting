@@ -7,7 +7,7 @@ from optparse import OptionParser
 
 root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(root_dir + "/lib")
-config_file = root_dir + "/config/config.yaml"
+
 import s3_posting
 from s3_posting import functions
 from s3_posting import s3_posting
@@ -16,13 +16,9 @@ from s3_posting import profile
 
 settings = {}
 settings['bucket'] = ""
-settings['region'] = ""
-settings['access_key_id'] = None
-settings['secret_access_key'] = None
 settings['overwrite'] = False
 settings['md5sum'] = False
 settings['sha256sum'] = False
-settings['url_expires'] = 0
 settings['subfolder'] = None
 
 posting_files = []
@@ -57,22 +53,12 @@ def main():
 		quit(1)
 
 	#Load config file and verify it
-	cfg = config.load_config(config_file)
-	if (not config.validate_config(cfg)):
-		print ("Invalid config.yaml\n")
-		quit()
+	if (options.profile != None):
+		profile_file = root_dir + "/config/" + options.profile + ".yaml"
+	else:
+		profile_file = root_dir + "/config/config.yaml"
 
-	if (("access_key_id" in cfg['aws']) and ("secret_access_key" in cfg['aws'])):	
-		settings['access_key_id'] = cfg['aws']['access_key_id']
-		settings['secret_access_key'] = cfg['aws']['secret_access_key']
-
-	if ("url_expires" in cfg['aws']):
-		settings['url_expires'] = cfg['aws']['url_expires']
-	if ("region" in cfg['aws']):
-		settings['region'] = cfg['aws']['region']
-
-	if ("endpoint_url" in cfg['aws']):
-		settings['endpoint_url'] = cfg['aws']['endpoint_url']
+	my_profile = profile.profile(profile_file)
 
 	#Verify -f/--files files and -d/--dir 
 	if ((options.file != None) and (options.dir != None)):
@@ -112,24 +98,24 @@ def main():
 		quit(1)
 	else:
 		for i in options.email:
-			if (not config.validate_email(i)):
+			if (not functions.validate_email(i)):
 				parser.error("Invalid email " + i)
 				quit(1)
 
 	#Verify cc emails
 	if (cfg['email']['cc_emails'] != None):
 		for i in cfg['email']['cc_emails']:
-			if (not config.validate_email(i)):
+			if (not functions.validate_email(i)):
 				parser.error("Invalid cc email " + i)
 				quit(1)
 		settings['cc'] = cfg['email']['cc_emails']
 
 	#Verify -b/--bucket
-	if ((options.bucket == None) and cfg['aws']['default_bucket'] == None):
+	if ((options.bucket == None) and my_profile.get_bucket() == None):
 		parser.error("Must specify a bucket")
 		quit()
-	elif ((options.bucket == None) and cfg['aws']['default_bucket'] != None):
-		settings['bucket'] = cfg['aws']['default_bucket']
+	elif ((options.bucket == None) and my_profile.get_bucket() != None):
+		settings['bucket'] = my_profile.get_bucket()
 	else:
 		settings['bucket'] = options.bucket
 
@@ -161,7 +147,8 @@ def main():
 
 	#If Dry Run is disabled, upload files and send email
 	if (options.dry_run == None):
-		s3_connection = s3_posting.s3_posting(settings['region'],settings['access_key_id'],settings['secret_access_key'],settings['bucket'],settings['endpoint_url'])
+		s3_connection = s3_posting.s3_posting(my_profile,settings)
+
 	
 		if (s3_connection.bucket_exists() != True):
                 	functions.log("Bucket " + settings['bucket'] + " does not exist")

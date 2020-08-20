@@ -2,6 +2,7 @@ import sys
 import os.path
 import datetime
 import subprocess
+import validators
 
 from s3_posting import __version__
 from s3_posting import __website__
@@ -46,3 +47,8 @@ def get_files_in_dir(path):
 		return file_paths
 	else:
 		return False
+
+def validate_email(email):
+        if not validators.email(email):
+                return False
+        return True

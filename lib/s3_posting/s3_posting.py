@@ -27,14 +27,13 @@ class ProgressPercentage(object):
 
 class s3_posting:
 	
-	signature_version = "s3v4"
+	__signature_version = "s3v4"
+	__profile = ""
+	__settings = ""
 
-	def __init__(self,region,access_key_id,secret_access_key,bucket,endpoint_url):
-		self._region = region
-		self._access_key_id = access_key_id
-		self._secret_access_key = secret_access_key
-		self._bucket = bucket
-		self._endpoint_url = endpoint_url
+	def __init__(self,profile,settings):
+		self.__profile = profile
+		self.__settings = settings
 		self.connect()
 
 	def bucket_exists(self):
@@ -77,8 +76,10 @@ class s3_posting:
 
 	def connect(self):
                	try:
-                    self._connection = boto3.client('s3',endpoint_url=self._endpoint_url,region_name=self._region,aws_access_key_id=self._access_key_id,
-                        aws_secret_access_key=self._secret_access_key,config=Config(signature_version=self.signature_version))
+                    self._connection = boto3.client('s3',endpoint_url=self.__profile.get_endpoint_url(),
+					region_name=self._profile.get_region(),aws_access_key_id=self._profile.get_access_key(),
+		                        aws_secret_access_key=self._profile.get_secret_access_key(),
+					config=Config(signature_version=self.__signature_version))
                     self._connection.meta.events.register("provide-client-params.s3.GetObject", self.client_param_handler)
                     self._connection.meta.events.register("before-sign.s3.GetObject", self.request_param_injector)
                 except botocore.exceptions.ClientError as e:
