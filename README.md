@@ -7,6 +7,10 @@
 - Emails user with the location of the data
 - Generates md5sum and/or sha256 checksums of the file
 ## Installation
+- Download Code using a tag release or git clone
+```
+git clone https://github.com/IGBIllinois/s3_posting.git
+```
 - Install using virtualenv
 ```
 virtualenv .env && source .env/bin/activate && pip install -r requirements.txt
@@ -15,11 +19,9 @@ virtualenv .env && source .env/bin/activate && pip install -r requirements.txt
 ```
 pip install -r requirements.txt
 ```
-- Download Code using a tag release or git clone
-```
-git clone https://github.com/IGBIllinois/s3_posting.git
-```
-- Copy config/config.yaml.dist to config/config.yaml
+
+- Copy config/config.yaml.dist to config/config.yaml for the default profile
+- Create other profiles by copying config/config.yaml.dist to config/<PROFILE_NAME>.yaml
 - Edit config/config.yaml to have defaults for AWS bucket and email server
 ```
 aws:
