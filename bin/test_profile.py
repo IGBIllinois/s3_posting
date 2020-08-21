@@ -14,11 +14,6 @@ from s3_posting import functions
 
 def main():
 	
-	global settings
-	global posting_files
-	global file_checksums
-	global url
-
 	description = "Tests Profile for proper formatting\n"
 	description += functions.get_website()
 	parser = OptionParser(description=description,version=functions.get_version())
