@@ -29,11 +29,11 @@ class ProgressPercentage(object):
 class s3_posting:
 	
 	__signature_version = "s3v4"
-	__settings = {}
+	__parameters = {}
 
-	def __init__(self,in_profile,in_settings):
+	def __init__(self,in_profile,in_parameters):
 		self.__profile = in_profile
-		self.__settings = in_settings
+		self.__parameters = in_parameters
 		self.connect()
 
 	def bucket_exists(self):

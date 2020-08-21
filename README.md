@@ -40,7 +40,6 @@ email:
 
 ## Usage
 ```
-[root@localhost bin]# ./upload.py
 Usage: upload.py [options]
 
 Posts data to S3 buckets through linux command line
@@ -49,13 +48,19 @@ https://github.com/IGBIllinois/s3_posting
 Options:
   --version             show program's version number and exit
   -h, --help            show this help message and exit
+  -p PROFILE, --profile=PROFILE
+                        Profile to use
   -f FILE, --file=FILE  Filename to upload
   -d DIR, --dir=DIR     Directory to upload
-  --email=EMAIL         Email to send to
-  --cc=CC               Email address to cc
+  -e EMAIL, --email=EMAIL
+                        Email to send to
   -b BUCKET, --bucket=BUCKET
                         Bucket to upload to
+  -s SUBFOLDER, --subfolder=SUBFOLDER
+                        Folder to place object in
   --md5                 Create md5 checksums
   --sha256              Create sha256 checksums
+  -m METADATA, --metadata=METADATA
+                        Key/values metadata to add to object
   --dry-run             Dry Run. Disable uploads and emails
 ```
