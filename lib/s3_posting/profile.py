@@ -11,7 +11,6 @@ class profile:
 	__cfg = ""
 	__endpoint_url = ""
 	__region = ""
-	__enable_url = True
 	__url_expires = 7
 	__access_key_id = ""
 	__secret_access_key = ""
@@ -50,15 +49,13 @@ class profile:
 				exit(1)
 
 			self.__profile_file = profile_file
+			self.__load_profile()
 
 	def get_endpoint_url(self):
 		return self.__endpoint_url
 
 	def get_region(self):
 		return self.__region
-
-	def get_enable_url(self):
-		return self.__enable_url
 
 	def get_url_expires(self):
 		return self.__url_expires
@@ -96,38 +93,39 @@ class profile:
 	def get_seperate_emails(self):
 		return self.__seperate_emails
 
+	def print_profile(self):
+		print(yaml.dump(self.__cfg))
+	
 ##########Private Functions###########
 	def __load_profile(self):
-		if ("endpoint_url" in __cfg['aws']):
-			__endpoint_url = __cfg['aws']['endpoint_url']
-		if ("region" in __cfg['aws']):
-			__region = __cfg['aws']['region']
-		if ("url_expires" in __cfg['aws']):
-			__url_expires = __cfg['aws']['url_expires']
-		if ("access_key_id" in __cfg['aws']):
-			__access_key_id = __cfg['aws']['access_key_id']
-		if ("secret_access_key" in __cfg['aws']):
-			__secret_access_key = __cfg['aws']['secret_access_key']
-		if ("default_bucket" in __cfg['aws']):
-			___bucket = __cfg['aws']['default_bucket']
-		if ("enable_url" in __cfg['aws']):
-			__enable_url = __cfg['aws']['enable_url']
-		if ("storage_class" in __cfg['aws']):
-			__storage_class = __cfg['aws']['storage_class']
-		if ("enable" in __cfg['email']):
-			__enable_email = __cfg['email']['enable']
-		if ("smtp_server" in __cfg['email']):
-			__smtp_server = __cfg['email']['smtp_server']
-		if ("from" in __cfg['email']):
-			__email_from = __cfg['email']['from']
-		if ("cc_emails" in __cfg['email']):
-			__cc_emails = __cfg['email']['cc_emails']
-		if ("reply_to" in __cfg['email']):
-			__reply_to = __cfg['email']['reply_to']
-		if ("subject" in __cfg['subject']):
-			__subject = __cfg['email']['subject']
-		if ("seperate_emails" in __cfg['email']):
-			__seperate_emails = __cfg['email']['seperate_emails']
+		if ("endpoint_url" in self.__cfg['aws']):
+			self.__endpoint_url = self.__cfg['aws']['endpoint_url']
+		if ("region" in self.__cfg['aws']):
+			self.__region = self. __cfg['aws']['region']
+		if ("url_expires" in self.__cfg['aws']):
+			self.__url_expires =self. __cfg['aws']['url_expires']
+		if ("access_key_id" in self.__cfg['aws']):
+			self.__access_key_id = self.__cfg['aws']['access_key_id']
+		if ("secret_access_key" in self.__cfg['aws']):
+			self.__secret_access_key = self.__cfg['aws']['secret_access_key']
+		if ("default_bucket" in self.__cfg['aws']):
+			self.__bucket = self.__cfg['aws']['default_bucket']
+		if ("storage_class" in self.__cfg['aws']):
+			self.__storage_class = self.__cfg['aws']['storage_class']
+		if ("enable" in self.__cfg['email']):
+			self.__enable_email = self.__cfg['email']['enable']
+		if ("smtp_server" in self.__cfg['email']):
+			self.__smtp_server = self.__cfg['email']['smtp_server']
+		if ("from" in self.__cfg['email']):
+			self.__email_from = self.__cfg['email']['from']
+		if ("cc_emails" in self.__cfg['email']):
+			self.__cc_emails = self.__cfg['email']['cc_emails']
+		if ("reply_to" in self.__cfg['email']):
+			self.__reply_to = self.__cfg['email']['reply_to']
+		if ("subject" in self.__cfg['email']):
+			self.__subject = self.__cfg['email']['subject']
+		if ("seperate_emails" in self.__cfg['email']):
+			self.__seperate_emails = self.__cfg['email']['seperate_emails']
 
 	def __validate_config(in_cfg):
 		success = True

@@ -1,8 +1,7 @@
 aws:
         endpoint_url:
         region: us-east-1
-	enable_url: true
-	#URL expiration. Maximum 7 days for signature version s3v4
+	#URL expiration. Maximum 7 days for signature version s3v4, set 0 to disable
         url_expires: 7
         access_key_id: 
         secret_access_key: 

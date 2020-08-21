@@ -6,6 +6,7 @@ import boto3
 import botocore
 from botocore.client import Config
 from urllib.parse import urlencode
+from s3_posting import profile
 
 class ProgressPercentage(object):
     def __init__(self, filename):
@@ -28,18 +29,17 @@ class ProgressPercentage(object):
 class s3_posting:
 	
 	__signature_version = "s3v4"
-	__profile = ""
-	__settings = ""
+	__settings = {}
 
-	def __init__(self,profile,settings):
-		self.__profile = profile
-		self.__settings = settings
+	def __init__(self,in_profile,in_settings):
+		self.__profile = in_profile
+		self.__settings = in_settings
 		self.connect()
 
 	def bucket_exists(self):
         	response = self._connection.list_buckets()
 	        buckets = [bucket['Name'] for bucket in response['Buckets']]
-        	if self._bucket in buckets:
+        	if self.__profile.get_bucket() in buckets:
 	                return True
         	return False
 
@@ -50,7 +50,7 @@ class s3_posting:
 		else:
 			full_path = basename
 		try:
-        	        response = self._connection.upload_file(file_path,self._bucket,full_path,Callback=ProgressPercentage(file_path))
+        	        response = self._connection.upload_file(file_path,self.__profile.get_bucket(),full_path,Callback=ProgressPercentage(file_path))
 		except botocore.exceptions.ClientError as e:
         	        error_code = int(e.response['Error']['Code'])
                 	functions.log("Error uploading file " + file_path + ", Error Code: " + str(error_code))
@@ -62,13 +62,13 @@ class s3_posting:
 		if (url_expires != 0):
 	                seconds = url_expires * 24 * 60 * 60
         	        url = self._connection.generate_presigned_url('get_object',Params = {
-                	        'Bucket': self._bucket,
+                	        'Bucket': self.__profile.get_bucket(),
                         	'Key': filename,
 				'x-custom': custom_param},
 	                        ExpiresIn = seconds)
 		else:
                 	url = self._connection.generate_presigned_url('get_object',Params = {
-                        	'Bucket': self._bucket,
+                        	'Bucket': self.__profile.get_bucket(),
 	                        'Key': filename,
 				'x-custom': custom_param})
 
@@ -77,8 +77,8 @@ class s3_posting:
 	def connect(self):
                	try:
                     self._connection = boto3.client('s3',endpoint_url=self.__profile.get_endpoint_url(),
-					region_name=self._profile.get_region(),aws_access_key_id=self._profile.get_access_key(),
-		                        aws_secret_access_key=self._profile.get_secret_access_key(),
+					region_name=self.__profile.get_region(),aws_access_key_id=self.__profile.get_access_key_id(),
+		                        aws_secret_access_key=self.__profile.get_secret_access_key(),
 					config=Config(signature_version=self.__signature_version))
                     self._connection.meta.events.register("provide-client-params.s3.GetObject", self.client_param_handler)
                     self._connection.meta.events.register("before-sign.s3.GetObject", self.request_param_injector)
@@ -91,7 +91,7 @@ class s3_posting:
 	def create_directory(self,directory):
 		if (directory != None):
 	        	try:
-		                response = self._connection.put_object(Bucket=self._bucket,Key=directory + "/")
+		                response = self._connection.put_object(Bucket=self.__profile.get_bucket(),Key=directory + "/")
         		except botocore.exceptions.ClientError as e:
                 		error_code = int(e.response['Error']['Code'])
 		                functions.log("Error Creating Directory " + directory + ", Error Code: " + str(error_code))
@@ -102,7 +102,7 @@ class s3_posting:
 	def directory_exists(self,directory):
 		if (directory != None):
 	        	try:
-        	        	response = self._connection.list_objects_v2(Bucket=self._bucket,Prefix=directory + "/")
+        	        	response = self._connection.list_objects_v2(Bucket=self.__profile.get_bucket(),Prefix=directory + "/")
 	        	except botocore.exceptions.ClientError as e:
         	        	error_code = int(e.response['Error']['Code'])
 	                	functions.log("Error Checking Directory " + directory + ", Error Code: " + str(error_code))

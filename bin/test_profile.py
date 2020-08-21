@@ -31,6 +31,7 @@ def main():
 
 	profile_file = root_dir + "/config/" + options.profile + ".yaml"	
 	my_profile = profile.profile(profile_file)
+	my_profile.print_profile()
 	
 
 if __name__ == '__main__':

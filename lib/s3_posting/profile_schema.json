@@ -6,8 +6,7 @@
 		"properties": {
 			"endpoint_url": { "type": "string" },
 			"region": { "type": "string" },
-			"enable_url": { "type": "boolean" },
-			"url_expires": { "type": ["integer","null"],"minimum": 1,"maximum": 7 },
+			"url_expires": { "type": ["integer","null"],"minimum": 0,"maximum": 7 },
 			"access_key_id": { "type": "string" },
 			"secret_access_key": { "type": "string" },
 			"default_bucket": { "type": "string" },
