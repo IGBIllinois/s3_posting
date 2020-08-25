@@ -43,14 +43,16 @@ class s3_posting:
 	                return True
         	return False
 
-	def upload_file(self,file_path,directory):
+	def upload_file(self,file_path,directory,metadata = {}):
 		basename = os.path.basename(file_path);
 		if (directory != None):
 			full_path = directory + "/" + basename
 		else:
 			full_path = basename
 		try:
-        	        response = self._connection.upload_file(file_path,self.__profile.get_bucket(),full_path,Callback=ProgressPercentage(file_path))
+        	        response = self._connection.upload_file(file_path,self.__profile.get_bucket(),full_path,
+								Callback=ProgressPercentage(file_path),
+								ExtraArgs={'StorageClass': self.__profile.get_storage_class(), 'Metadata': metadata})
 		except botocore.exceptions.ClientError as e:
         	        error_code = int(e.response['Error']['Code'])
                 	functions.log("Error uploading file " + file_path + ", Error Code: " + str(error_code))

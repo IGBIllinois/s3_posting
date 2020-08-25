@@ -7,43 +7,41 @@ from jinja2 import Environment, FileSystemLoader
 
 class s3_mail:
 
-	template_dir = 'templates'
-	template_txt = 'email.txt'
-	template_html = 'email.html'
-
-	def __init__(self,in_profile,in_parameters):
+	__template_dir = 'templates'
+	__template_txt = 'email.txt'
+	__template_html = 'email.html'
+	__emails = []
+	__files = []
+	
+	def __init__(self,in_profile,in_emails,in_files):
 		path = os.path.abspath(__file__)
 		dir_path = os.path.dirname(path)
-		file_loader = FileSystemLoader(dir_path + "/../../" + self.template_dir)
+		file_loader = FileSystemLoader(dir_path + "/../../" + self.__template_dir)
 		self.template_env = Environment(loader=file_loader)
 		self.__profile = in_profile
-		self.__parameters = in_parameters
-		self.email = self.__parameters['email']
-		self.subject = self.__profile.get_subject()
-		self.url = url
-		self.md5sum = md5sum
-		self.sha256sum = sha256sum
+		self.__emails = in_emails
+		self.__files = in_files
 
 	def html_email(self):
-		template = self.template_env.get_template('default/' + self.template_html)
-		if (os.path.exists("../../templates/custom/" + self.template_html)):
-			template = self.template_env.get_template('custom/' + self.template_html)
+		template = self.template_env.get_template('default/' + self.__template_html)
+		if (os.path.exists("../../templates/custom/" + self.__template_html)):
+			template = self.template_env.get_template('custom/' + self.__template_html)
 		try:
-			output = template.render(expire_date=self.expire_date,urls=self.url)
+			output = template.render(files=self.__files)
 		except TemplateError as e:
-			sys.exit('Syntax Error in email template ' + self.template_html)
+			sys.exit('Syntax Error in email template ' + self.__template_html)
 
 		return output
 
 	def text_email(self):
-		template = self.template_env.get_template('default/' + self.template_txt)
-		if (os.path.exists("../../templates/custom/" + self.template_txt)):
-			template = self.template_env.get_template('custom/' + self.template_txt)
+		template = self.template_env.get_template('default/' + self.__template_txt)
+		if (os.path.exists("../../templates/custom/" + self.__template_txt)):
+			template = self.template_env.get_template('custom/' + self.__template_txt)
 
 		try:
-			output = template.render(expire_date=self.expire_date,urls=self.url)
+			output = template.render(files=self.__files)
 		except TemplateError as e:
-			sys.exit('Syntax Error in email template ' + self.tempalte_txt)
+			sys.exit('Syntax Error in email template ' + self.__template_txt)
 
 		return output
 
@@ -55,7 +53,7 @@ class s3_mail:
 		msg = MIMEMultipart('alternative')
 		msg['Subject'] = self.__profile.get_subject()
 		msg['From'] = self.__profile.get_from_email()
-		msg['To'] = ''.join(self.email)
+		msg['To'] = ''.join(self.__emails)
 		if (self.cfg['email']['cc_emails'] != None):
 			msg['Cc'] = self.cfg['email']['cc_emails']
 		if (self.__profile.get_reply_to() != None):
@@ -65,7 +63,7 @@ class s3_mail:
 		msg.attach(part1)
 		msg.attach(part2)
 		s = smtplib.SMTP(self.__profile.get_smtp_server())
-		envelop = [self.email]
+		envelop = [self.__emails]
 		if (self.__profile.get_cc_emails() != None):
 			envelop += self.cfg['email']['cc_emails'].split(",")
 		result = s.sendmail(self.__profile.get_from_email(),envelop,msg.as_string())

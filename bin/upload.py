@@ -93,7 +93,7 @@ def main():
 		parameters['subfolder'] = options.subfolder
 		
 	#Verify -email
-	if (options.email == None):
+	if ((options.email == None) and my_profile.get_email_enabled()):
 		parser.error("Must specifiy an email address with --email")
 		quit(1)
 	else:
@@ -132,7 +132,7 @@ def main():
 	if (parameters['md5sum']):
 		functions.log("Calculating md5 checksums")
 		for i in posting_files:
-			checksum = functions.create_md5_checksum(i)
+			checksum = functions.create_md5_checksum(posting_files[i]['file'])
 			file_md5_checksums[i] = checksum
 			functions.log("File: " + i + ", MD5 checksum: " + str(checksum.decode("utf-8")))
 
@@ -140,7 +140,7 @@ def main():
 	if (parameters['sha256sum']):
 		functions.log("Calculating sha256 checksums")
 		for i in posting_files:
-			checksum = functions.create_sha256_checksum(i)
+			checksum = functions.create_sha256_checksum(posting_files[i]['file'])
 			file_sha256_checksums[i] = checksum
 			functions.log("File: " + i + ", SHA256 checksum: " + str(checksum.decode("utf-8")))
 
@@ -167,11 +167,16 @@ def main():
 				full_path = parameters['subfolder'] + "/" + basename
 			else:
 				full_path = basename
-			url[i] = s3_connection.get_url(basename,my_profile.get_url_expires(),'test1');
-			functions.log("File: " + i + ", URL: " + url[i])
+			functions.log("File: " + i)
+			if (my_profile.get_url_expires() > 0):
+				url[i] = s3_connection.get_url(basename,my_profile.get_url_expires(),'test1');
+				functions.log("URL: " + url[i])
+
 		#Send Email
-		mail = s3_mail.s3_mail(options.email,url,file_md5_checksums,file_sha256_checksums,parameters)
-		mail.send_email()
+		#if (my_profile.get_email_enabled()):
+		#	mail = s3_mail.s3_mail(options.email,url,file_md5_checksums,file_sha256_checksums,parameters)
+		#	mail.send_email()
+
 	elif (options.dry_run):
 		functions.log("Dry Run Enabled - Disabling uploads and email")
 

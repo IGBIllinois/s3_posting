@@ -27,7 +27,7 @@
 			"from": { "type": ["string","null"] },
 			"cc_emails": { "type": ["array","null"] },
 			"reply_to": { "type": ["string","null"] },
-			"subject": { "type": "string" },
+			"subject": { "type": ["string","null"] },
 			"seperate_emails": { "type": ["boolean","null"] }
 		},
 		"additionalProperties": false,
