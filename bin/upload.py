@@ -23,15 +23,12 @@ parameters['subfolder'] = None
 
 posting_files = {}
 emails = {}
-url = {}
-custom_url_var = "x-email"
 
 def main():
 	
 	global parameters
 	global posting_files
-	global file_checksums
-	global url
+	global emails
 
 	description = "Posts data to S3 buckets through linux command line\n"
 	description += functions.get_website()
@@ -123,7 +120,6 @@ def main():
 
 	functions.log("Bucket: " + parameters['bucket'])
 	
-	
 	if (options.md5):
 		parameters['md5sum'] = True
 		functions.log("md5 checksum enabled")
@@ -159,8 +155,8 @@ def main():
 	                quit()
 
 		if not s3_connection.directory_exists(parameters['subfolder']):
-			functions.log("Directory " + options.email + " does not exist.  Creating Directory")
-			s3_connection.create_directory(options.email)
+			functions.log("Directory " + parameters['subfolder'] + " does not exist.  Creating Directory")
+			s3_connection.create_directory(parameters['subfolder'])
 
 		#Upload Files
 		for i in posting_files:
@@ -171,10 +167,28 @@ def main():
 			else:
 				full_path = basename
 			functions.log("File: " + posting_files[i]['file'])
+		
+		
+		if (my_profile.get_seperate_emails()):
+			k = 0
+			for i in options.email:
+				emails[k] = {}
+				emails[k]['to'] = i
+				emails[k]['files'] = posting_files
+				if (my_profile.get_url_expires() > 0):
+					for posting_file in emails[k]['files']:
+						emails[k]['files'][posting_file]['url'] = s3_connection.get_url(basename,my_profile.get_url_expires(),emails[k]['to'])
+						functions.log("URL: " + emails[k]['files'][posting_file]['url'])
+					k += 1
+		else:
+			emails[0] = {}
+			emails[0]['to'] = options.email
+			emails[0]['files'] = posting_files
 			if (my_profile.get_url_expires() > 0):
-				url[i] = s3_connection.get_url(basename,my_profile.get_url_expires(),'test1');
-				functions.log("URL: " + url[i])
-
+				for k in emails[0]['files']:
+					emails[0]['files'][k]['url'] = s3_connection.get_url(basename,my_profile.get_url_expires())
+					functions.log("URL:" + emails[0]['files'][k]['url'])
+			
 		#Send Email
 		#if (my_profile.get_email_enabled()):
 		#	mail = s3_mail.s3_mail(options.email,url,file_md5_checksums,file_sha256_checksums,parameters)

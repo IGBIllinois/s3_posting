@@ -30,6 +30,7 @@ class s3_posting:
 	
 	__signature_version = "s3v4"
 	__parameters = {}
+	__custom_url_var = "x-email"
 
 	def __init__(self,in_profile,in_parameters):
 		self.__profile = in_profile
@@ -63,16 +64,20 @@ class s3_posting:
 	def get_url(self,filename,url_expires=0,custom_param=''):
 		if (url_expires != 0):
 	                seconds = url_expires * 24 * 60 * 60
+		else:
+			seconds = 7 * 24 * 60 * 60
+
+		if (custom_param != ''):
         	        url = self._connection.generate_presigned_url('get_object',Params = {
                 	        'Bucket': self.__profile.get_bucket(),
                         	'Key': filename,
-				'x-custom': custom_param},
+				self.__custom_url_var: custom_param},
 	                        ExpiresIn = seconds)
 		else:
-                	url = self._connection.generate_presigned_url('get_object',Params = {
-                        	'Bucket': self.__profile.get_bucket(),
-	                        'Key': filename,
-				'x-custom': custom_param})
+			 url = self._connection.generate_presigned_url('get_object',Params = {
+                                'Bucket': self.__profile.get_bucket(),
+                                'Key': filename},
+                                ExpiresIn = seconds)
 
 		return url
 
