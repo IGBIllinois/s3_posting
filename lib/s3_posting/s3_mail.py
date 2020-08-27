@@ -37,6 +37,7 @@ class s3_mail:
 			template = self.template_env.get_template('custom/' + self.__template_txt)
 
 		try:
+			print(self.__email['files'])
 			output = template.render(files=self.__email['files'])
 		except TemplateError as e:
 			sys.exit('Syntax Error in email template ' + self.__template_txt)

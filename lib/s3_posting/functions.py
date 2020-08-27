@@ -20,7 +20,7 @@ def create_md5_checksum(file_path):
 	if (p.returncode):
 		return False
 	else:
-		return stdout 
+		return stdout.strip().rstrip() 
 	
 def create_sha256sum_checksum(file_path):
         cmd = "sha256sum " + file_path + " | awk '{print $1}'"
@@ -29,7 +29,7 @@ def create_sha256sum_checksum(file_path):
         if (p.returncode):
                 return False
         else:
-                return stdout
+                return stdout.strip().rstrip()
 
 def log(msg):
 	now = datetime.datetime.now()

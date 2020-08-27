@@ -132,7 +132,7 @@ def main():
 		functions.log("Calculating md5 checksums")
 		for i in posting_files:
 			checksum = functions.create_md5_checksum(posting_files[i]['file'])
-			posting_files[i]['md5sum'] = checksum
+			posting_files[i]['md5sum'] = str(checksum.decode("utf-8"))
 			#file_md5_checksums[i] = checksum
 			functions.log("File: " + posting_files[i]['file'] + ", MD5 checksum: " + str(checksum.decode("utf-8")))
 
@@ -141,7 +141,7 @@ def main():
 		functions.log("Calculating sha256 checksums")
 		for i in posting_files:
 			checksum = functions.create_sha256sum_checksum(posting_files[i]['file'])
-			posting_files[i]['sha256sum'] = checksum
+			posting_files[i]['sha256sum'] = str(checksum.decode("utf-8"))
 			#file_sha256_checksums[i] = checksum
 			functions.log("File: " + posting_files[i]['file'] + ", SHA256 checksum: " + str(checksum.decode("utf-8")))
 
