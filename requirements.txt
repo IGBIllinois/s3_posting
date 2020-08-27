@@ -1,5 +1,5 @@
 boto3
 validators
-pyyaml
+pyyaml=>5.1
 Jinja2
 jsonschema
