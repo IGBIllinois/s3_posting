@@ -26,6 +26,7 @@ class s3_mail:
 			template = self.template_env.get_template('custom/' + self.__template_html)
 		try:
 			output = template.render(files=self.__email['files'])
+			print(self.__email['files'])
 		except TemplateError as e:
 			sys.exit('Syntax Error in email template ' + self.__template_html)
 
@@ -37,7 +38,6 @@ class s3_mail:
 			template = self.template_env.get_template('custom/' + self.__template_txt)
 
 		try:
-			print(self.__email['files'])
 			output = template.render(files=self.__email['files'])
 		except TemplateError as e:
 			sys.exit('Syntax Error in email template ' + self.__template_txt)
@@ -45,8 +45,6 @@ class s3_mail:
 		return output
 
 	def send_email(self):
-		if (self.__profile.get_cc_emails() != None):
-			print ("cc: " + ', ' .join(self.__profile.get_cc_emails()) + "\n")
 		self.expire_date = datetime.date.today() + datetime.timedelta(+self.__profile.get_url_expires())
 		formatted_expire_date = self.expire_date.strftime('%Y-%m-%d')
 		msg = MIMEMultipart('alternative')

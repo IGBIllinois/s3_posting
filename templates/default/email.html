@@ -4,7 +4,7 @@
 <p>Below is the list of files and the link to download them.</p>
 <p>The links (URLs) will expire on {{ expire_date }}</p>
 <br>
-{% for item in files %}
+{% for key,item in files.items() %}
 <p>File: {{item.file }}</p>
 <p>URL: <a href=' {{ item.url }}'>{{ item.url }} </a></p>
 {% if item.md5sum %}
