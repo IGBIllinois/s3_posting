@@ -16,7 +16,7 @@ class profile:
 	__secret_access_key = ""
 	__bucket = ""
 	__storage_class = "STANDARD"
-	__email_enable = True
+	__email_enable = False
 	__smtp_server = ""
 	__email_from = ""
 	__cc_emails = ""
@@ -36,6 +36,7 @@ class profile:
 				self.__cfg = yaml.load(ymlfile,Loader=yaml.FullLoader)
 			except yaml.YAMLError as exc:
 				print ("Error Parsing " + profile_file)
+				print(exc.message)
 				exit(1)
 
 			try:
@@ -113,7 +114,7 @@ class profile:
 		if ("storage_class" in self.__cfg['aws']):
 			self.__storage_class = self.__cfg['aws']['storage_class']
 		if ("enable" in self.__cfg['email']):
-			self.__enable_email = self.__cfg['email']['enable']
+			self.__email_enable = self.__cfg['email']['enable']
 		if ("smtp_server" in self.__cfg['email']):
 			self.__smtp_server = self.__cfg['email']['smtp_server']
 		if ("from" in self.__cfg['email']):
