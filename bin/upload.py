@@ -21,10 +21,10 @@ parameters['md5sum'] = False
 parameters['sha256sum'] = False
 parameters['subfolder'] = None
 
-posting_files = []
-file_md5_checksums = {}
-file_sha256_checksums = {}
+posting_files = {}
+emails = {}
 url = {}
+custom_url_var = "x-email"
 
 def main():
 	
@@ -69,11 +69,14 @@ def main():
 		quit(1)
 	elif ((options.file != None) and (options.dir == None)):
 		success = True
+		k = 0
 		for i in options.file:
 			if (os.path.isfile(i) == False):
 				parser.error("File " + i + " does not exist")
 				success = False
-			posting_files = options.file
+			posting_files[k] = {}
+			posting_files[k]['file'] = i
+			k += 1
 		if not success:
 			quit(1)
 	elif ((options.file == None) and (options.dir != None)):
@@ -87,8 +90,8 @@ def main():
 					parser.error("No files in " + i)
 					quit(1)
 				else:
-					posting_files.extend(result)
-	
+					#posting_files.extend(result)
+					print(result)	
 	if (options.subfolder != None):
 		parameters['subfolder'] = options.subfolder
 		
@@ -97,11 +100,11 @@ def main():
 		parser.error("Must specifiy an email address with --email")
 		quit(1)
 	else:
+		k = 0
 		for i in options.email:
 			if (not functions.validate_email(i)):
 				parser.error("Invalid email " + i)
 				quit(1)
-
 	#Verify cc emails
 	if (my_profile.get_cc_emails() != None):
 		for i in my_profile.get_cc_emails():
@@ -127,22 +130,24 @@ def main():
 	if (options.sha256):
 		parameters['sha256sum'] = True
 		functions.log("sha256 checksum enabled")
-
+	
 	#Calculate md5 checksums
 	if (parameters['md5sum']):
 		functions.log("Calculating md5 checksums")
 		for i in posting_files:
 			checksum = functions.create_md5_checksum(posting_files[i]['file'])
-			file_md5_checksums[i] = checksum
-			functions.log("File: " + i + ", MD5 checksum: " + str(checksum.decode("utf-8")))
+			posting_files[i]['md5sum'] = checksum
+			#file_md5_checksums[i] = checksum
+			functions.log("File: " + posting_files[i]['file'] + ", MD5 checksum: " + str(checksum.decode("utf-8")))
 
         #Calculate sha256 checksums
 	if (parameters['sha256sum']):
 		functions.log("Calculating sha256 checksums")
 		for i in posting_files:
-			checksum = functions.create_sha256_checksum(posting_files[i]['file'])
-			file_sha256_checksums[i] = checksum
-			functions.log("File: " + i + ", SHA256 checksum: " + str(checksum.decode("utf-8")))
+			checksum = functions.create_sha256sum_checksum(posting_files[i]['file'])
+			posting_files[i]['sha256sum'] = checksum
+			#file_sha256_checksums[i] = checksum
+			functions.log("File: " + posting_files[i]['file'] + ", SHA256 checksum: " + str(checksum.decode("utf-8")))
 
 	#If Dry Run is disabled, upload files and send email
 	if (options.dry_run == None):
@@ -157,17 +162,15 @@ def main():
 			functions.log("Directory " + options.email + " does not exist.  Creating Directory")
 			s3_connection.create_directory(options.email)
 
-
-
 		#Upload Files
 		for i in posting_files:
-			s3_connection.upload_file(i,parameters['subfolder'])
-			basename = os.path.basename(i)
+			s3_connection.upload_file(posting_files[i]['file'],parameters['subfolder'])
+			basename = os.path.basename(posting_files[i]['file'])
 			if (parameters['subfolder'] != None):
 				full_path = parameters['subfolder'] + "/" + basename
 			else:
 				full_path = basename
-			functions.log("File: " + i)
+			functions.log("File: " + posting_files[i]['file'])
 			if (my_profile.get_url_expires() > 0):
 				url[i] = s3_connection.get_url(basename,my_profile.get_url_expires(),'test1');
 				functions.log("URL: " + url[i])
