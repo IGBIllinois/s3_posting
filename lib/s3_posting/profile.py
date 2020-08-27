@@ -78,7 +78,7 @@ class profile:
 	def get_smtp_server(self):
 		return self.__smtp_server
 
-	def get_email_from(self):
+	def get_from_email(self):
 		return self.__email_from
 
 	def get_cc_emails(self):

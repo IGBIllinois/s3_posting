@@ -190,9 +190,10 @@ def main():
 					functions.log("URL:" + emails[0]['files'][k]['url'])
 			
 		#Send Email
-		#if (my_profile.get_email_enabled()):
-		#	mail = s3_mail.s3_mail(options.email,url,file_md5_checksums,file_sha256_checksums,parameters)
-		#	mail.send_email()
+		if (my_profile.get_email_enabled()):
+			for email in emails:
+				mail = s3_mail.s3_mail(my_profile,emails[email])
+				mail.send_email()
 
 	elif (options.dry_run):
 		functions.log("Dry Run Enabled - Disabling uploads and email")
