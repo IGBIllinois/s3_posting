@@ -73,7 +73,8 @@ def main():
 				parser.error("File " + i + " does not exist")
 				success = False
 			posting_files[k] = {}
-			posting_files[k]['file'] = i
+			posting_files[k]['file'] = os.path.basename(i)
+			posting_files[k]['full_path'] = i
 			k += 1
 		if not success:
 			quit(1)
@@ -132,19 +133,19 @@ def main():
 	if (parameters['md5sum']):
 		functions.log("Calculating md5 checksums")
 		for i in posting_files:
-			checksum = functions.create_md5_checksum(posting_files[i]['file'])
+			checksum = functions.create_md5_checksum(posting_files[i]['full_path'])
 			posting_files[i]['md5sum'] = str(checksum.decode("utf-8"))
 			#file_md5_checksums[i] = checksum
-			functions.log("File: " + posting_files[i]['file'] + ", MD5 checksum: " + str(checksum.decode("utf-8")))
+			functions.log("File: " + posting_files[i]['full_path'] + ", MD5 checksum: " + str(checksum.decode("utf-8")))
 
         #Calculate sha256 checksums
 	if (parameters['sha256sum']):
 		functions.log("Calculating sha256 checksums")
 		for i in posting_files:
-			checksum = functions.create_sha256sum_checksum(posting_files[i]['file'])
+			checksum = functions.create_sha256sum_checksum(posting_files[i]['full_path'])
 			posting_files[i]['sha256sum'] = str(checksum.decode("utf-8"))
 			#file_sha256_checksums[i] = checksum
-			functions.log("File: " + posting_files[i]['file'] + ", SHA256 checksum: " + str(checksum.decode("utf-8")))
+			functions.log("File: " + posting_files[i]['full_path'] + ", SHA256 checksum: " + str(checksum.decode("utf-8")))
 
 	#If Dry Run is disabled, upload files and send email
 	if (options.dry_run == None):
@@ -161,13 +162,13 @@ def main():
 
 		#Upload Files
 		for i in posting_files:
-			s3_connection.upload_file(posting_files[i]['file'],parameters['subfolder'])
+			s3_connection.upload_file(posting_files[i]['full_path'],parameters['subfolder'])
 			basename = os.path.basename(posting_files[i]['file'])
 			if (parameters['subfolder'] != None):
 				full_path = parameters['subfolder'] + "/" + basename
 			else:
 				full_path = basename
-			functions.log("File: " + posting_files[i]['file'])
+			functions.log("File: " + posting_files[i]['full_path'])
 		
 		
 		if (my_profile.get_seperate_emails()):
