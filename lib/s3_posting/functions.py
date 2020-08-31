@@ -1,4 +1,5 @@
 import sys
+import os
 import os.path
 import datetime
 import subprocess
@@ -52,3 +53,11 @@ def validate_email(email):
         if not validators.email(email):
                 return False
         return True
+
+def get_profiles(config_dir):
+	profiles = []
+	for file in os.listdir(config_dir):
+		if file.endswith(".yaml"):
+			profiles.append(os.path.splitext(file)[0])
+	return ", ".join(profiles)
+

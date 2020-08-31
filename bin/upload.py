@@ -32,8 +32,9 @@ def main():
 
 	description = "Posts data to S3 buckets through linux command line\n"
 	description += functions.get_website()
+	profile_list = functions.get_profiles(root_dir +"/config/")
 	parser = OptionParser(description=description,version=functions.get_version())
-	parser.add_option("-p","--profile",type="string",help="Profile to use");
+	parser.add_option("-p","--profile",type="string",help="Profile to use ("+profile_list+")");
 	parser.add_option("-f","--file",action='append', type="string",help="Filename to upload");
 	parser.add_option("-d","--dir",action='append',type="string",help="Directory to upload");
 	parser.add_option("-e","--email",action='append',type='string', help="Email to send to");
