@@ -2,6 +2,8 @@ import os.path
 import datetime
 import smtplib
 import sys
+import s3_posting
+from s3_posting import functions
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from jinja2 import Environment, FileSystemLoader
@@ -67,11 +69,6 @@ class s3_mail:
 				envelop += ', ' .join(self.__profile.get_cc_emails())
 			result = s.sendmail(self.__profile.get_from_email(),envelop,msg.as_string())
 			s.quit
-		except smtplib.SMTPException as e:
-			sys.exit('Error sending email: ' + e)
-		except smtplib.SMTPResponseException as e:
-			sys.exit('Error sending email: ' + e.smtp_error)
-		except OSError as e:
-			sys.exit('Error sending email:')
-			
-
+		except (OSError,smtplib.SMTPException) as e:
+			functions.log('Error sending email')
+			sys.exit()
