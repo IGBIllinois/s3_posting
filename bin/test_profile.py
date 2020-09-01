@@ -16,8 +16,9 @@ def main():
 	
 	description = "Tests Profile for proper formatting\n"
 	description += functions.get_website()
+	profile_list = functions.get_profiles(root_dir +"/config/")
 	parser = OptionParser(description=description,version=functions.get_version())
-	parser.add_option("-p","--profile",type="string",help="Profile to use");
+	parser.add_option("-p","--profile",type="string",help="Profile to use ("+profile_list+")");
 	(options,args) = parser.parse_args()
 
 	if len(sys.argv) == 1:
