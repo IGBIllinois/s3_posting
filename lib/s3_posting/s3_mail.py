@@ -69,6 +69,8 @@ class s3_mail:
 			s.quit
 		except smtplib.SMTPException as e:
 			sys.exit('Error sending email: ' + e)
+		except smtplib.SMTPResponseException as e:
+			sys.exit('Error sending email: ' + e.smtp_error)
 		except OSError as e:
 			sys.exit('Error sending email:')
 			
