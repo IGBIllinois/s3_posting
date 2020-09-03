@@ -52,7 +52,8 @@ class s3_mail:
 		msg = MIMEMultipart('alternative')
 		msg['Subject'] = self.__profile.get_subject()
 		msg['From'] = self.__profile.get_from_email()
-		msg['To'] = ''.join(self.__email['to'])
+		to_emails = self.__email['to']
+		msg['To'] = ','.join([str(i) for i in self.__email['to']])
 		if (self.__profile.get_cc_emails() != None):
 			msg['Cc'] = ', ' .join(self.__profile.get_cc_emails())
 		if (self.__profile.get_reply_to() != None):
@@ -64,11 +65,12 @@ class s3_mail:
 
 		try:
 			s = smtplib.SMTP(self.__profile.get_smtp_server())
-			envelop = [self.__email['to']]
+			envelop = ', ' . join(self.__email['to'])
 			if (self.__profile.get_cc_emails() != None):
-				envelop += ', ' .join(self.__profile.get_cc_emails())
+				envelop += ', ' + ', ' .join(self.__profile.get_cc_emails())
 			result = s.sendmail(self.__profile.get_from_email(),envelop,msg.as_string())
 			s.quit
+			functions.log('Email successfully sent to ' + ', ' .join(self.__email['to']))
 		except (OSError,smtplib.SMTPException) as e:
 			functions.log('Error sending email')
 			sys.exit()

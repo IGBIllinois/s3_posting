@@ -135,7 +135,6 @@ def main():
 		for i in posting_files:
 			checksum = functions.create_md5_checksum(posting_files[i]['full_path'])
 			posting_files[i]['md5sum'] = str(checksum.decode("utf-8"))
-			#file_md5_checksums[i] = checksum
 			functions.log("File: " + posting_files[i]['full_path'] + ", MD5 checksum: " + str(checksum.decode("utf-8")))
 
         #Calculate sha256 checksums
@@ -144,7 +143,6 @@ def main():
 		for i in posting_files:
 			checksum = functions.create_sha256sum_checksum(posting_files[i]['full_path'])
 			posting_files[i]['sha256sum'] = str(checksum.decode("utf-8"))
-			#file_sha256_checksums[i] = checksum
 			functions.log("File: " + posting_files[i]['full_path'] + ", SHA256 checksum: " + str(checksum.decode("utf-8")))
 
 	#If Dry Run is disabled, upload files and send email
@@ -175,7 +173,8 @@ def main():
 			k = 0
 			for i in options.email:
 				emails[k] = {}
-				emails[k]['to'] = i
+				emails[k]['to'] = []
+				emails[k]['to'].append(i)
 				emails[k]['files'] = posting_files
 				if (my_profile.get_url_expires() > 0):
 					for posting_file in emails[k]['files']:
@@ -184,6 +183,7 @@ def main():
 					k += 1
 		else:
 			emails[0] = {}
+			#emails[0]['to'] = list()
 			emails[0]['to'] = options.email
 			emails[0]['files'] = posting_files
 			if (my_profile.get_url_expires() > 0):
