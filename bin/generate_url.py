@@ -128,17 +128,17 @@ def main():
 			functions.log("Bucket " + parameters['bucket'] + " does not exist")
 			sys.exit('Aborting')
 
-		if not s3_connection.directory_exists(parameters['subfolder']):
+		if not s3_connection.object_exists(parameters['subfolder']):
 			functions.log("Subfolder " + parameters['subfolder'] + " does not exist.")
 			sys.exit('Aborting')
 		
 		for i in posting_files:
 			if (parameters['subfolder']):
-				if (s3_connection.directory_exists(parameters['subfolder'] + "/" + posting_files[i]['file'])):
+				if (s3_connection.object_exists(parameters['subfolder'] + "/" + posting_files[i]['file'])):
 					functions.log("File " + parameters['subfolder'] + "/" + posting_files[i]['file'] + " does not exist.");
 					sys.exit('Aborting')
 			else:
-				if (s3_connection.directory_exists(posting_files[i]['file'])):
+				if (s3_connection.object_exists(posting_files[i]['file'])):
                                         functions.log("File " + posting_files[i]['file'] + " does not exist.");
                                         sys.exit('Aborting')
 

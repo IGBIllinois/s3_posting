@@ -92,7 +92,7 @@ def main():
 					#posting_files.extend(result)
 					print(result)	
 	if (options.subfolder != None):
-		parameters['subfolder'] = options.subfolder
+		parameters['subfolder'] = os.path.join(options.subfolder,'')
 		
 	#Verify -email
 	if ((options.email == None) and my_profile.get_email_enabled()):
@@ -154,7 +154,7 @@ def main():
                 	functions.log("Bucket " + parameters['bucket'] + " does not exist")
 	                quit()
 
-		if not s3_connection.directory_exists(parameters['subfolder']):
+		if not s3_connection.object_exists(parameters['subfolder']):
 			functions.log("Directory " + parameters['subfolder'] + " does not exist.  Creating Directory")
 			s3_connection.create_directory(parameters['subfolder'])
 
@@ -177,17 +177,17 @@ def main():
 				emails[k]['to'].append(i)
 				emails[k]['files'] = posting_files
 				if (my_profile.get_url_expires() > 0):
-					for posting_file in emails[k]['files']:
-						emails[k]['files'][posting_file]['url'] = s3_connection.get_url(posting_file['file'],my_profile.get_url_expires(),emails[k]['to'])
-						functions.log("URL: " + emails[k]['files'][posting_file]['url'])
-					k += 1
+					for uploaded_files in emails[k]['files']:
+						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(emails[k]['files'][uploaded_files]['file'],my_profile.get_url_expires(),emails[k]['to'])
+						functions.log("URL: " + emails[k]['files'][uploaded_files]['url'])
+				k += 1
 		else:
 			emails[0] = {}
 			emails[0]['to'] = options.email
 			emails[0]['files'] = posting_files
 			if (my_profile.get_url_expires() > 0):
 				for k in emails[0]['files']:
-					emails[0]['files'][k]['url'] = s3_connection.get_url(basename,my_profile.get_url_expires())
+					emails[0]['files'][k]['url'] = s3_connection.get_url(emails[0]['files'][k]['file'],my_profile.get_url_expires())
 					functions.log("URL:" + emails[0]['files'][k]['url'])
 			
 		#Send Email

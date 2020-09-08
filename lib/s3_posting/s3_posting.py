@@ -106,13 +106,13 @@ class s3_posting:
 	        	return True
 		
 
-	def directory_exists(self,directory):
-		if (directory != None):
+	def object_exists(self,s3_object):
+		if (s3_object != None):
 	        	try:
-        	        	response = self._connection.list_objects_v2(Bucket=self.__profile.get_bucket(),Prefix=directory + "/")
+        	        	response = self._connection.list_objects_v2(Bucket=self.__profile.get_bucket(),Prefix=s3_object)
 	        	except botocore.exceptions.ClientError as e:
         	        	error_code = int(e.response['Error']['Code'])
-	                	functions.log("Error Checking Directory " + directory + ", Error Code: " + str(error_code))
+	                	functions.log("Error Checking Object " + s3_object + ", Error Code: " + str(error_code))
 
 		        return 'Contents' in response
 		else:
