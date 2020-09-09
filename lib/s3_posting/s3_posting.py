@@ -7,6 +7,7 @@ import botocore
 from botocore.client import Config
 from urllib.parse import urlencode
 from s3_posting import profile
+from s3_posting import functions
 
 class ProgressPercentage(object):
     def __init__(self, filename):
@@ -58,7 +59,6 @@ class s3_posting:
         	        error_code = int(e.response['Error']['Code'])
                 	functions.log("Error uploading file " + file_path + ", Error Code: " + str(error_code))
 	                return error_code
-		print (response)
 		return True
 
 	def get_url(self,filename,url_expires=0,custom_param=''):
@@ -97,26 +97,36 @@ class s3_posting:
 
 	def create_directory(self,directory):
 		if (directory != None):
-	        	try:
-		                response = self._connection.put_object(Bucket=self.__profile.get_bucket(),Key=directory + "/")
-        		except botocore.exceptions.ClientError as e:
-                		error_code = int(e.response['Error']['Code'])
-		                functions.log("Error Creating Directory " + directory + ", Error Code: " + str(error_code))
-        		        return error_code
-	        	return True
+			try:
+				response = self._connection.put_object(Bucket=self.__profile.get_bucket(),Key=directory + "/")
+				return True
+			except botocore.exceptions.ClientError as e:
+				error_code = int(e.response['Error']['Code'])
+				functions.log("Error Creating Directory " + directory + ", Error Code: " + str(error_code))
+				sys.exit('Aborting')
+		return False
 		
+	def directory_exists(self,s3_object):
+		if (s3_object != None):
+			try:
+				response = self._connection.list_objects_v2(Bucket=self.__profile.get_bucket(),Prefix=s3_object)
+				if 'Contents' in response:
+					return True
+			except botocore.exceptions.ClientError as e:
+				error_code = int(e.response['Error']['Code'])
+				functions.log("Error Checking directory " + s3_object + ", Error Code: " + str(error_code))
+		return False
 
 	def object_exists(self,s3_object):
 		if (s3_object != None):
-	        	try:
-        	        	response = self._connection.list_objects_v2(Bucket=self.__profile.get_bucket(),Prefix=s3_object)
-	        	except botocore.exceptions.ClientError as e:
-        	        	error_code = int(e.response['Error']['Code'])
-	                	functions.log("Error Checking Object " + s3_object + ", Error Code: " + str(error_code))
-
-		        return 'Contents' in response
-		else:
-			return True	
+			try:
+				response = self._connection.head_object(Bucket=self.__profile.get_bucket(),Key=s3_object)
+				return True
+			except botocore.exceptions.ClientError as e:
+				return False
+				error_code = int(e.response['Error']['Code'])
+				functions.log("Error Checking Object " + s3_object + ", Error Code: " + str(error_code))
+		return False
 
 
 	# To add custom parameters to presigned url

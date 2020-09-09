@@ -92,7 +92,7 @@ def main():
 					#posting_files.extend(result)
 					print(result)	
 	if (options.subfolder != None):
-		parameters['subfolder'] = os.path.join(options.subfolder,'')
+		parameters['subfolder'] = options.subfolder
 		
 	#Verify -email
 	if ((options.email == None) and my_profile.get_email_enabled()):
@@ -153,10 +153,11 @@ def main():
 		if (s3_connection.bucket_exists() != True):
                 	functions.log("Bucket " + parameters['bucket'] + " does not exist")
 	                quit()
-
-		if not s3_connection.object_exists(parameters['subfolder']):
-			functions.log("Directory " + parameters['subfolder'] + " does not exist.  Creating Directory")
-			s3_connection.create_directory(parameters['subfolder'])
+	
+		if (parameters['subfolder'] != None):
+			if not s3_connection.directory_exists(parameters['subfolder']):
+				functions.log("Directory " + parameters['subfolder'] + " does not exist.  Creating Directory")
+				s3_connection.create_directory(parameters['subfolder'])
 
 		#Upload Files
 		for i in posting_files:

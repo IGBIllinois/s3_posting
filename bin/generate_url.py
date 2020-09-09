@@ -63,18 +63,11 @@ def main():
 		parser.error("Must specify a file with --file or a dir with --dir")
 		quit(1)
 	elif ((options.file != None) and (options.dir == None)):
-		success = True
 		k = 0
 		for i in options.file:
-			if (os.path.isfile(i) == False):
-				parser.error("File " + i + " does not exist")
-				success = False
 			posting_files[k] = {}
-			posting_files[k]['file'] = os.path.basename(i)
-			posting_files[k]['full_path'] = i
+			posting_files[k]['file'] = i
 			k += 1
-		if not success:
-			quit(1)
 	elif ((options.file == None) and (options.dir != None)):
 		for i in options.dir:
 			if (os.path.isdir(i) == False):
@@ -128,19 +121,20 @@ def main():
 			functions.log("Bucket " + parameters['bucket'] + " does not exist")
 			sys.exit('Aborting')
 
-		if not s3_connection.object_exists(parameters['subfolder']):
-			functions.log("Subfolder " + parameters['subfolder'] + " does not exist.")
-			sys.exit('Aborting')
+		#if not s3_connection.object_exists(parameters['subfolder']):
+		#	functions.log("Subfolder " + parameters['subfolder'] + " does not exist.")
+		#	sys.exit('Aborting')
 		
 		for i in posting_files:
+			
 			if (parameters['subfolder']):
-				if (s3_connection.object_exists(parameters['subfolder'] + "/" + posting_files[i]['file'])):
-					functions.log("File " + parameters['subfolder'] + "/" + posting_files[i]['file'] + " does not exist.");
-					sys.exit('Aborting')
+				full_path = parameters['subfolder'] + "/" + posting_files[i]['file']
 			else:
-				if (s3_connection.object_exists(posting_files[i]['file'])):
-                                        functions.log("File " + posting_files[i]['file'] + " does not exist.");
-                                        sys.exit('Aborting')
+				full_path = posting_files[i]['file']
+
+			if not (s3_connection.object_exists(full_path)):
+					functions.log("File " + full_path + " does not exist.");
+					sys.exit('Aborting')
 
 		if (my_profile.get_seperate_emails()):
 			k = 0
@@ -150,19 +144,19 @@ def main():
 				emails[k]['to'].append(i)
 				emails[k]['files'] = posting_files
 				if (my_profile.get_url_expires() > 0):
-					for posting_file in emails[k]['files']:
-						emails[k]['files'][posting_file]['url'] = s3_connection.get_url(posting_file['file'],my_profile.get_url_expires(),emails[k]['to'])
-						functions.log("URL: " + emails[k]['files'][posting_file]['url'])
-					k += 1
+					for uploaded_files in emails[k]['files']:
+						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(emails[k]['files'][uploaded_files]['file'],my_profile.get_url_expires(),emails[k]['to'])
+						functions.log("URL: " + emails[k]['files'][uploaded_files]['url'])
+				k += 1
 		else:
 			emails[0] = {}
 			emails[0]['to'] = options.email
 			emails[0]['files'] = posting_files
 			if (my_profile.get_url_expires() > 0):
 				for k in emails[0]['files']:
-					emails[0]['files'][k]['url'] = s3_connection.get_url(basename,my_profile.get_url_expires())
+					emails[0]['files'][k]['url'] = s3_connection.get_url(emails[0]['files'][k]['file'],my_profile.get_url_expires())
 					functions.log("URL:" + emails[0]['files'][k]['url'])
-			
+	
 		#Send Email
 		if (my_profile.get_email_enabled()):
 			for email in emails:
