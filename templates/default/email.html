@@ -1,21 +1,24 @@
 <html><head></head><body>
 <p>Hi,</p>
-<p>Your sequencing results from the DNA Sequencing lab at UIUC are available for download.</p>
-<p>Below is the list of files and the link to download them.</p>
-<p>The links (URLs) will expire on {{ expire_date }}</p>
-<br>
+<p>Your sequencing results from the DNA Sequencing lab at UIUC are available for download.
+<br>Below is the list of files and the link to download them.
+<br>The links (URLs) will expire on {{ expire_date }}</p>
 {% for key,item in files.items() %}
-<p>File: {{item.file }}</p>
-<p>URL: <a href=' {{ item.url }}'>{{ item.url }} </a></p>
+<p>File: {{item.file }}
+<br>URL: <a href=' {{ item.url }}'>{{ item.url }} </a>
 {% if item.md5sum %}
-	<p>md5sum: {{ item.md5sum }} </p>
+	<br>md5sum: {{ item.md5sum }}
 {% endif %}
 {% if item.sha256sum %}
-        <p>sha256sum: {{ item.sha256sum }} </p>
+        <br>sha256sum: {{ item.sha256sum }}
 {% endif %}
-
+</p>
+<hr>
 {% endfor %}
-        
+<p>To download the file via the command line</p>
+<p>curl -o FILENAME "URL"</p>
+<p>or</p>
+<p>wget -o FILENAME "URL"</p>
 <p>For questions about this posting, you may reply to this email and must cc: aghernan@illinois.edu and clwright@illinois.edu</p>
 <p>Sincerely,</p>
 <p>The DNA Sequencing Lab, University of Illinois at Urbana-Champaign</p>

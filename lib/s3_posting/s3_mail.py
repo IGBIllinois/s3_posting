@@ -59,7 +59,7 @@ class s3_mail:
 			msg['Cc'] = ', ' .join(self.__profile.get_cc_emails())
 		if (self.__profile.get_reply_to() != None):
 			msg['Reply-to'] = self.__profile.get_reply_to()
-		part1 = MIMEText(self.text_email(),'text')
+		part1 = MIMEText(self.text_email())
 		part2 = MIMEText(self.html_email(),'html')
 		msg.attach(part1)
 		msg.attach(part2)

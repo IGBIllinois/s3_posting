@@ -1,20 +1,26 @@
-Hi,\n\n
-Your sequencing results from the DNA Sequencing lab at UIUC are available for download.\n\n
-Below is the list of files and the link to download them.\n\n
-The links (URLs) will expire on {{ expire_date }}\n\n
+Hi,
+
+Your sequencing results from the DNA Sequencing lab at UIUC are available for download.
+Below is the list of files and the link to download them.
+The links (URLs) will expire on {{ expire_date }}
 
 {% for key,item in files.items() %}
-	File: {{item.file }}\n\n
-	URL: {{ item.url }}\n\n
-	{% if item.md5sum %}
-		md5sum: {{ item.md5sum }} \n\n
-	{% endif %}
-	{% if item.sha256sum %}
-        	sha256sum: {{ item.sha256sum }} \n\n
-	{% endif %}
+File: {{item.file }}
+URL: {{ item.url }}
+{% if item.md5sum %}md5sum: {{ item.md5sum }} {% endif %}
+{% if item.sha256sum %}sha256sum: {{ item.sha256sum }}{% endif %}
+---------------------------------------
+{% endfor %}
+To download the file via the command line:
+curl -o FILENAME "URL"
 
-{% endfor %}        
-For questions about this posting, you may reply to this email and must cc: aghernan@illinois.edu and clwright@illinois.edu\n\n
-Sincerely,\n\n
-The DNA Sequencing Lab, University of Illinois at Urbana-Champaign\n\n
+or
+
+wget -o FILENAME "URL"
+
+For questions about this posting, you may reply to this email and must cc: aghernan@illinois.edu and clwright@illinois.edu
+
+Sincerely,
+
+The DNA Sequencing Lab, University of Illinois at Urbana-Champaign
 
