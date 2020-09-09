@@ -14,7 +14,8 @@ class s3_mail:
 	__template_txt = 'email.txt'
 	__template_html = 'email.html'
 	__email = {}
-	
+	__formatted_expired_date = ""
+
 	def __init__(self,in_profile,in_email):
 		path = os.path.abspath(__file__)
 		dir_path = os.path.dirname(path)
@@ -22,13 +23,15 @@ class s3_mail:
 		self.template_env = Environment(loader=file_loader)
 		self.__profile = in_profile
 		self.__email = in_email
+		expired_date = datetime.date.today() + datetime.timedelta(+self.__profile.get_url_expires())
+		self.__formatted_expired_date = expired_date.strftime('%Y-%m-%d')
 
 	def html_email(self):
 		template = self.template_env.get_template('default/' + self.__template_html)
 		if (os.path.exists("../../templates/custom/" + self.__template_html)):
 			template = self.template_env.get_template('custom/' + self.__template_html)
 		try:
-			output = template.render(files=self.__email['files'])
+			output = template.render(files=self.__email['files'],expire_date=self.__formatted_expired_date)
 		except TemplateError as e:
 			sys.exit('Syntax Error in email template ' + self.__template_html)
 
@@ -40,15 +43,13 @@ class s3_mail:
 			template = self.template_env.get_template('custom/' + self.__template_txt)
 
 		try:
-			output = template.render(files=self.__email['files'])
+			output = template.render(files=self.__email['files'],expire_date=self.__formatted_expired_date)
 		except TemplateError as e:
 			sys.exit('Syntax Error in email template ' + self.__template_txt)
 
 		return output
 
 	def send_email(self):
-		self.expire_date = datetime.date.today() + datetime.timedelta(+self.__profile.get_url_expires())
-		formatted_expire_date = self.expire_date.strftime('%Y-%m-%d')
 		msg = MIMEMultipart('alternative')
 		msg['Subject'] = self.__profile.get_subject()
 		msg['From'] = self.__profile.get_from_email()
