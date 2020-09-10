@@ -30,7 +30,7 @@ def main():
 	global posting_files
 	global emails
 
-	description = "Posts data to S3 buckets through linux command line\n"
+	description = "Regenerates unique URL for existing S3 file\n"
 	description += functions.get_website()
 	profile_list = functions.get_profiles(root_dir +"/config/")
 	parser = OptionParser(description=description,version=functions.get_version())
