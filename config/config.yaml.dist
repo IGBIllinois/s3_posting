@@ -14,7 +14,7 @@ email:
     enable: true
     smtp_server: 
     from: 
-    cc_emails: 
+    cc_emails: [] 
     reply_to: 
     subject:
     #Send seperate emails with unique presigned url for each email address Default: false
