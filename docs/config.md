@@ -3,18 +3,27 @@
 ## S3 User
 - You need to create a S3 user with read/write permissions to the bucket.
 - For Amazon, a user can be created in IAM.  Then a bucket policy can be applied in S3
-- An example policy is below
+- An example policy is below.  Replace <ORGID> and <BUCKETNAME> with your organization id and name of the bucket
 ```
 {
     "Statement": [
         {
+	    "Sid": "ListObjectsInBucket",
             "Effect": "Allow",
             "Principal": {
                 "AWS": "arn:aws:iam::<ORGID>:user/upload_user"
             },
-            "Action": "s3:*",
+            "Action": ["s3:ListBucket"],
             "Resource": "arn:aws:s3:::<BUCKETNAME>"
-        }
+        },
+	{
+	    "Sid": "AllObjectActions",
+	    "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::<ORGID>:user/upload_user"
+            },
+            "Action": "s3:*Object",
+            "Resource": "arn:aws:s3:::<BUCKETNAME>"
     ]
 }
 ```
