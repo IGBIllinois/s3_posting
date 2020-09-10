@@ -3,7 +3,7 @@
 ## S3 User
 - You need to create a S3 user with read/write permissions to the bucket.
 - For Amazon, a user can be created in IAM.  Then a bucket policy can be applied in S3
-- An example policy is below.  Replace <ORGID>,<USERNAME>, <BUCKETNAME> with your organziation ID, username, and name of bucket
+- An example policy is below.  Replace \<ORGID\>, \<USERNAME\>, \<BUCKETNAME\> with your organziation ID, username, and name of bucket
 ```
 {
     "Statement": [
