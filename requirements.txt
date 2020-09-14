@@ -1,4 +1,4 @@
-boto3
+boto3>=1.14.19
 validators
 pyyaml>=5.1
 Jinja2
