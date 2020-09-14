@@ -32,7 +32,7 @@
 {
     "Statement": [
         {
-            "Sid": "ListObjectsInBucket",
+            "Sid": "ListObjectsAndAllObjectActions",
             "Effect": "Allow",
             "Action": ["s3:ListBucket", "s3:*Object"],
             "Resource": "arn:aws:s3:::<BUCKETNAME>"
