@@ -2,33 +2,8 @@
 
 ## S3 User
 - You need to create a S3 user with read/write permissions to the bucket.
-- For Amazon, a user can be created in IAM.  Then a bucket policy can be applied in S3
-- An example for AWS policy is below.  Replace \<ORGID\>, \<USERNAME\>, \<BUCKETNAME\> with your organziation ID, username, and name of bucket
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-	    "Sid": "ListObjectsInBucket",
-            "Effect": "Allow",
-            "Principal": {
-                "AWS": "arn:aws:iam::<ORGID>:user/<USERNAME>"
-            },
-            "Action": ["s3:ListBucket"],
-            "Resource": "arn:aws:s3:::<BUCKETNAME>"
-        },
-	{
-	    "Sid": "AllObjectActions",
-	    "Effect": "Allow",
-            "Principal": {
-                "AWS": "arn:aws:iam::<ORGID>:user/<USERNAME>"
-            },
-            "Action": "s3:*Object",
-            "Resource": "arn:aws:s3:::<BUCKETNAME>"
-    ]
-}
-```
-- For Minio, the policy is simplified as it doesn't have the Principal setting.  In Minio, you specify which user/group the policy should apply to using the mc admin console
+- For Amazon, a user can be created in IAM.  Then a policy can be made in IAM.  Then the policy can be applied to the user or group
+- An example for AWS policy is below.  Replace \<BUCKETNAME\> with the name of the bucket
 ```
 {
     "Version": "2012-10-17",
