@@ -12,11 +12,11 @@ URL: {{ item.url }}
 ---------------------------------------
 {% endfor %}
 To download the file via the command line:
-curl -o FILENAME "URL"
+curl -o FILENAME "https://....."
 
 or
 
-wget -o FILENAME "URL"
+wget -o FILENAME "https://...."
 
 For questions about this posting, you may reply to this email and must cc: aghernan@illinois.edu and clwright@illinois.edu
 

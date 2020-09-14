@@ -1,7 +1,8 @@
 # Configuration
 
 ## S3 User
-- You need to create a S3 user with read/write permissions to the bucket.
+- First create the bucket you wish to use
+- Then you need to create a S3 user
 - For Amazon, a user can be created in IAM.  Then a policy can be made in IAM.  Then the policy can be applied to the user or group
 - An example for AWS policy is below.  Replace \<BUCKETNAME\> with the name of the bucket
 ```
