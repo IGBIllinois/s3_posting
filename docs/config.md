@@ -6,6 +6,7 @@
 - An example for AWS policy is below.  Replace \<ORGID\>, \<USERNAME\>, \<BUCKETNAME\> with your organziation ID, username, and name of bucket
 ```
 {
+    "Version": "2012-10-17",
     "Statement": [
         {
 	    "Sid": "ListObjectsInBucket",
@@ -30,12 +31,13 @@
 - For Minio, the policy is simplified as it doesn't have the Principal setting.  In Minio, you specify which user/group the policy should apply to using the mc admin console
 ```
 {
+    "Version": "2012-10-17",
     "Statement": [
         {
             "Sid": "ListObjectsAndAllObjectActions",
             "Effect": "Allow",
-            "Action": ["s3:ListBucket", "s3:*Object"],
-            "Resource": "arn:aws:s3:::<BUCKETNAME>"
+            "Action": ["s3:ListBucket","s3:GetObject", "s3:PutObject", "s3:GetObjectVersion", "s3:DeleteObject", "s3:DeleteObjectVersion" ],
+            "Resource": "arn:aws:s3:::<BUCKETNAME>/*"
         }
     ]
 }
