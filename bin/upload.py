@@ -36,9 +36,9 @@ def main():
 	parser = OptionParser(description=description,version=functions.get_version())
 	parser.add_option("-p","--profile",type="string",help="Profile to use ("+profile_list+")");
 	parser.add_option("-f","--file",action='append', type="string",help="Filename to upload");
-	parser.add_option("-d","--dir",action='append',type="string",help="Directory to upload");
+	parser.add_option("-d","--dir",action='append', type="string",help="Directory to upload");
 	parser.add_option("-e","--email",action='append',type='string', help="Email to send to");
-	parser.add_option("-b","--bucket",type='string',help="Bucket to upload to");
+	parser.add_option("-b","--bucket",action='append', type='string',help="Bucket to upload to");
 	parser.add_option("-s","--subfolder",type='string',help="Folder to place object in");	
 	parser.add_option("--md5",action='store_true',help="Create md5 checksums");
 	parser.add_option("--sha256",action='store_true',help="Create sha256 checksums");
@@ -58,7 +58,9 @@ def main():
 
 	my_profile = profile.profile(profile_file)
 
-	#Verify -f/--files files and -d/--dir 
+	#Verify -f/--files files and -d/--dir
+	if ((options.dir != None) and (len(options.dir) > 1)): 
+		parser.error("-d/--dir can only be specified once")
 	if ((options.file != None) and (options.dir != None)):
 		parser.error("--file and --dir are mutually exclusive")
 		quit(1)
@@ -89,10 +91,15 @@ def main():
 					parser.error("No files in " + i)
 					quit(1)
 				else:
-					#posting_files.extend(result)
-					print(result)	
+					k = 0;
+					for file_result in result:
+						posting_files[k] = {}
+						posting_files[k]['file'] = os.path.basename(file_result)
+						posting_files[k]['full_path'] = file_result
+						k =+ 1
 	if (options.subfolder != None):
 		parameters['subfolder'] = options.subfolder
+		functions.log("Subfolder: " + parameters['subfolder'])
 		
 	#Verify -email
 	if ((options.email == None) and my_profile.get_email_enabled()):
@@ -112,7 +119,10 @@ def main():
 				quit(1)
 
 	#Verify -b/--bucket
-	if ((options.bucket == None) and my_profile.get_bucket() == None):
+	if ((options.bucket != None) and (len(options.bucket) > 1)):
+		parser.error("Can only specifiy a single bucket with -b/--bucket")
+		quit(1)
+	elif ((options.bucket == None) and my_profile.get_bucket() == None):
 		parser.error("Must specify a bucket")
 		quit()
 	elif ((options.bucket == None) and my_profile.get_bucket() != None):
@@ -161,13 +171,14 @@ def main():
 
 		#Upload Files
 		for i in posting_files:
+			functions.log("File: " + posting_files[i]['full_path'] + " Uploading")
 			s3_connection.upload_file(posting_files[i]['full_path'],parameters['subfolder'])
+			print("\n");
 			basename = os.path.basename(posting_files[i]['file'])
 			if (parameters['subfolder'] != None):
 				full_path = parameters['subfolder'] + "/" + basename
 			else:
 				full_path = basename
-			functions.log("File: " + posting_files[i]['full_path'])
 		
 		
 		if (my_profile.get_seperate_emails()):

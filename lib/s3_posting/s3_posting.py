@@ -52,7 +52,7 @@ class s3_posting:
 		else:
 			full_path = basename
 		try:
-        	        response = self._connection.upload_file(file_path,self.__profile.get_bucket(),full_path,
+			response = self._connection.upload_file(file_path,self.__profile.get_bucket(),full_path,
 								Callback=ProgressPercentage(file_path),
 								ExtraArgs={'StorageClass': self.__profile.get_storage_class(), 'Metadata': metadata})
 		except botocore.exceptions.ClientError as e:
