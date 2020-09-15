@@ -16,7 +16,7 @@ curl -o FILENAME "https://....."
 
 or
 
-wget -o FILENAME "https://...."
+wget -O FILENAME "https://...."
 
 For questions about this posting, you may reply to this email and must cc: aghernan@illinois.edu and clwright@illinois.edu
 
