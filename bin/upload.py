@@ -173,7 +173,7 @@ def main():
 		for i in posting_files:
 			functions.log("File: " + posting_files[i]['full_path'] + " Uploading")
 			s3_connection.upload_file(posting_files[i]['full_path'],parameters['subfolder'])
-			print("\n");
+			print();
 			basename = os.path.basename(posting_files[i]['file'])
 			if (parameters['subfolder'] != None):
 				full_path = parameters['subfolder'] + "/" + basename
