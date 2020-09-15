@@ -190,7 +190,7 @@ def main():
 				emails[k]['files'] = posting_files
 				if (my_profile.get_url_expires() > 0):
 					for uploaded_files in emails[k]['files']:
-						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(emails[k]['files'][uploaded_files]['file'],my_profile.get_url_expires(),emails[k]['to'])
+						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(emails[k]['files'][uploaded_files]['file'],my_profile.get_url_expires(),i)
 						functions.log("URL: " + emails[k]['files'][uploaded_files]['url'])
 				k += 1
 		else:
