@@ -102,9 +102,12 @@ def main():
 				quit(1)
 
 	#Verify -b/--bucket
-	if ((options.bucket == None) and my_profile.get_bucket() == None):
+	if ((options.bucket != None) and (len(options.bucket) > 1)):
+		parser.error("Can only specifiy a single bucket with -b/--bucket")
+		quit(1)
+	elif ((options.bucket == None) and my_profile.get_bucket() == None):
 		parser.error("Must specify a bucket")
-		quit()
+		quit(1)
 	elif ((options.bucket == None) and my_profile.get_bucket() != None):
 		parameters['bucket'] = my_profile.get_bucket()
 	else:
@@ -145,7 +148,10 @@ def main():
 				emails[k]['files'] = posting_files
 				if (my_profile.get_url_expires() > 0):
 					for uploaded_files in emails[k]['files']:
-						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(emails[k]['files'][uploaded_files]['file'],my_profile.get_url_expires(),emails[k]['to'])
+						s3_path = emails[k]['files'][uploaded_files]['file']
+						if (parameters['subfolder']):
+							s3_path = parameters['subfolder'] + "/" + s3_path
+						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(s3_path,my_profile.get_url_expires(),i)
 						functions.log("URL: " + emails[k]['files'][uploaded_files]['url'])
 				k += 1
 		else:
@@ -154,7 +160,10 @@ def main():
 			emails[0]['files'] = posting_files
 			if (my_profile.get_url_expires() > 0):
 				for k in emails[0]['files']:
-					emails[0]['files'][k]['url'] = s3_connection.get_url(emails[0]['files'][k]['file'],my_profile.get_url_expires())
+					s3_path = emails[k]['files'][uploaded_files]['file']
+					if (parameters['subfolder']):
+						s3_path = parameters['subfolder'] + "/" + s3_path
+					emails[0]['files'][k]['url'] = s3_connection.get_url(s3_path,my_profile.get_url_expires())
 					functions.log("URL:" + emails[0]['files'][k]['url'])
 	
 		#Send Email

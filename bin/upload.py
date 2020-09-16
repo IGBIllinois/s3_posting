@@ -191,10 +191,10 @@ def main():
 				emails[k]['files'] = posting_files
 				if (my_profile.get_url_expires() > 0):
 					for uploaded_files in emails[k]['files']:
-						file_path = emails[k]['files'][uploaded_files]['file']
+						s3_path = emails[k]['files'][uploaded_files]['file']
 						if (parameters['subfolder']):
-							file_path = parameters['subfolder'] + "/" + file_path
-						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(file_path,my_profile.get_url_expires(),i)
+							s3_path = parameters['subfolder'] + "/" + s3_path
+						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(s3_path,my_profile.get_url_expires(),i)
 						functions.log("URL: " + emails[k]['files'][uploaded_files]['url'])
 				k += 1
 		else:
@@ -203,10 +203,10 @@ def main():
 			emails[0]['files'] = posting_files
 			if (my_profile.get_url_expires() > 0):
 				for k in emails[0]['files']:
-					file_path = emails[k]['files'][uploaded_files]['file']
+					s3_path = emails[k]['files'][uploaded_files]['file']
 					if (parameters['subfolder']):
-                                                        file_path = parameters['subfolder'] + "/" + file_path
-					emails[0]['files'][k]['url'] = s3_connection.get_url(file_path,my_profile.get_url_expires())
+                                                        s3_path = parameters['subfolder'] + "/" + s3_path
+					emails[0]['files'][k]['url'] = s3_connection.get_url(s3_path,my_profile.get_url_expires())
 					functions.log("URL:" + emails[0]['files'][k]['url'])
 			
 		#Send Email
