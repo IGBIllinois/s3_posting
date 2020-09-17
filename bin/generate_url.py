@@ -36,7 +36,6 @@ def main():
 	parser = OptionParser(description=description,version=functions.get_version())
 	parser.add_option("-p","--profile",type="string",help="Profile to use ("+profile_list+")");
 	parser.add_option("-f","--file",action='append', type="string",help="Filename to generate URL");
-	parser.add_option("-d","--dir",action='append',type="string",help="Directory to generate URL");
 	parser.add_option("-e","--email",action='append',type='string', help="Email to send to");
 	parser.add_option("-b","--bucket",type='string',help="Bucket to upload to");
 	parser.add_option("-s","--subfolder",type='string',help="Folder to place object in");	
@@ -56,31 +55,16 @@ def main():
 	my_profile = profile.profile(profile_file)
 
 	#Verify -f/--files files and -d/--dir 
-	if ((options.file != None) and (options.dir != None)):
-		parser.error("--file and --dir are mutually exclusive")
+	if (options.file == None):
+		parser.error("Must specify a file with -f/--file")
 		quit(1)
-	elif ((options.file == None) and (options.dir == None)):
-		parser.error("Must specify a file with --file or a dir with --dir")
-		quit(1)
-	elif ((options.file != None) and (options.dir == None)):
+	elif (options.file != None):
 		k = 0
 		for i in options.file:
 			posting_files[k] = {}
 			posting_files[k]['file'] = i
 			k += 1
-	elif ((options.file == None) and (options.dir != None)):
-		for i in options.dir:
-			if (os.path.isdir(i) == False):
-				parser.error("Directory " + i + " is not a directory")
-				quit(1)
-			else:
-				result = functions.get_files_in_dir(i)
-				if (result == False):
-					parser.error("No files in " + i)
-					quit(1)
-				else:
-					#posting_files.extend(result)
-					print(result)	
+	
 	if (options.subfolder != None):
 		parameters['subfolder'] = options.subfolder
 		

@@ -96,7 +96,7 @@ def main():
 						posting_files[k] = {}
 						posting_files[k]['file'] = os.path.basename(file_result)
 						posting_files[k]['full_path'] = file_result
-						k =+ 1
+						k += 1
 
 	if (options.subfolder != None):
 		parameters['subfolder'] = options.subfolder
