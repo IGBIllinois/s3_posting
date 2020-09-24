@@ -68,11 +68,7 @@ class s3_mail:
 
 		try:
 			s = smtplib.SMTP(self.__profile.get_smtp_server())
-			envelop = self.__email['to']
-			if (self.__profile.get_cc_emails() != None):
-				envelop += self.__profile.get_cc_emails()
-			if (self.__profile.get_bcc_emails() != None):
-				envelop += self.__profile.get_bcc_emails()
+			envelop = self.__email['to'] + self.__profile.get_cc_emails() + self.__profile.get_bcc_emails()
 			result = s.sendmail(self.__profile.get_from_email(),envelop,msg.as_string())
 			s.quit
 			functions.log('Email successfully sent to ' + ', ' .join(self.__email['to']))
