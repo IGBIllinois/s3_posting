@@ -41,6 +41,7 @@ email:
     smtp_server:
     from:
     cc_emails: []
+    bcc_emails: []
     reply_to:
     subject:
     #Send seperate emails with unique presigned url for each email address Default: false
@@ -59,6 +60,7 @@ email:
    * smtp_server - hostname of the mail server to use
    * from - email address for the FROM field
    * cc_emails - list of emails to CC
+   * bcc_emails - list of emails to BCC
    * reply_to - email address for the reply to field
    * subject - Subject of the email
    * seperate_emails - Send one email to all the specified to: emails or send seperate emails to each to: with unique URLS for each one

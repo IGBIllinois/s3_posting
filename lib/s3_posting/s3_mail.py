@@ -57,6 +57,8 @@ class s3_mail:
 		msg['To'] = ','.join([str(i) for i in self.__email['to']])
 		if (self.__profile.get_cc_emails() != None):
 			msg['Cc'] = ',' .join(self.__profile.get_cc_emails())
+		if (self.__profile.get_bcc_emails() != None):
+			msg['Bcc'] = ',' .join(self.__profile.get_bcc_emails())
 		if (self.__profile.get_reply_to() != None):
 			msg['Reply-To'] = self.__profile.get_reply_to()
 		part1 = MIMEText(self.text_email())
@@ -69,6 +71,8 @@ class s3_mail:
 			envelop = self.__email['to']
 			if (self.__profile.get_cc_emails() != None):
 				envelop += self.__profile.get_cc_emails()
+			if (self.__profile.get_bcc_emails() != None):
+				envelop += self.__profile.get_bcc_emails()
 			result = s.sendmail(self.__profile.get_from_email(),envelop,msg.as_string())
 			s.quit
 			functions.log('Email successfully sent to ' + ', ' .join(self.__email['to']))

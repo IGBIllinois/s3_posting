@@ -19,7 +19,8 @@ class profile:
 	__email_enable = False
 	__smtp_server = ""
 	__email_from = ""
-	__cc_emails = ""
+	__cc_emails = []
+	__bcc_emails = []
 	__reply_to = ""
 	__subject = ""
 	__seperate_emails = False	
@@ -84,6 +85,8 @@ class profile:
 
 	def get_cc_emails(self):
 		return self.__cc_emails
+	def get_bcc_emails(self):
+		return self.__bcc_emails
 
 	def get_reply_to(self):
 		return self.__reply_to
@@ -121,6 +124,8 @@ class profile:
 			self.__email_from = self.__cfg['email']['from']
 		if ("cc_emails" in self.__cfg['email']):
 			self.__cc_emails = self.__cfg['email']['cc_emails']
+		if ("bcc_emails" in self.__cfg['email']):
+			self.__bcc_emails = self.__cfg['email']['bcc_emails']
 		if ("reply_to" in self.__cfg['email']):
 			self.__reply_to = self.__cfg['email']['reply_to']
 		if ("subject" in self.__cfg['email']):

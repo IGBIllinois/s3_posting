@@ -26,6 +26,7 @@
 			"smtp_server": { "type": ["string","null"] },
 			"from": { "type": ["string","null"] },
 			"cc_emails": { "type": ["array","null"] },
+			"bcc_emails": { "type": ["array","null"] },
 			"reply_to": { "type": ["string","null"] },
 			"subject": { "type": ["string","null"] },
 			"seperate_emails": { "type": ["boolean","null"] }
