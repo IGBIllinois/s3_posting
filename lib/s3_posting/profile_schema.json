@@ -1,0 +1,40 @@
+{
+      "type": "object",
+      "properties": {
+	      "aws": {
+        	"type": "object",
+		"properties": {
+			"endpoint_url": { "type": "string" },
+			"region": { "type": "string" },
+			"url_expires": { "type": ["integer","null"],"minimum": 0,"maximum": 7 },
+			"access_key_id": { "type": "string" },
+			"secret_access_key": { "type": "string" },
+			"default_bucket": { "type": "string" },
+			"storage_class": { "type": ["string","null"],
+				"enum": ["STANDARD","REDUCED_REDUNDANCY","STANDARD_IA",
+					"ONEZONE_IA","INTELLIGENT_TIERING","GLACIER","DEEP_ARCHIVE"
+					]
+			 	}
+		},
+		"additionalProperties": false,
+		"required": ["endpoint_url","region","access_key_id","secret_access_key"] 
+	      },
+	      "email": {
+        	"type": "object",
+		"properties": {
+			"enable": { "type": "boolean" },
+			"smtp_server": { "type": ["string","null"] },
+			"from": { "type": ["string","null"] },
+			"cc_emails": { "type": ["array","null"] },
+			"bcc_emails": { "type": ["array","null"] },
+			"reply_to": { "type": ["string","null"] },
+			"subject": { "type": ["string","null"] },
+			"seperate_emails": { "type": ["boolean","null"] }
+		},
+		"additionalProperties": false,
+		"required": ["enable"]
+      	      }
+       },
+	"additionalProperties": false,
+	"required": ["aws","email"]
+}

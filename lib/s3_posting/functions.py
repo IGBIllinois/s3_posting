@@ -1,7 +1,9 @@
 import sys
+import os
 import os.path
 import datetime
 import subprocess
+import validators
 
 from s3_posting import __version__
 from s3_posting import __website__
@@ -19,7 +21,7 @@ def create_md5_checksum(file_path):
 	if (p.returncode):
 		return False
 	else:
-		return stdout 
+		return stdout.strip().rstrip() 
 	
 def create_sha256sum_checksum(file_path):
         cmd = "sha256sum " + file_path + " | awk '{print $1}'"
@@ -28,7 +30,7 @@ def create_sha256sum_checksum(file_path):
         if (p.returncode):
                 return False
         else:
-                return stdout
+                return stdout.strip().rstrip()
 
 def log(msg):
 	now = datetime.datetime.now()
@@ -46,3 +48,16 @@ def get_files_in_dir(path):
 		return file_paths
 	else:
 		return False
+
+def validate_email(email):
+        if not validators.email(email):
+                return False
+        return True
+
+def get_profiles(config_dir):
+	profiles = []
+	for file in os.listdir(config_dir):
+		if file.endswith(".yaml"):
+			profiles.append(os.path.splitext(file)[0])
+	return ", ".join(profiles)
+
