@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-import os.path
+import os.path, time
 import glob
 from optparse import OptionParser
 
@@ -42,7 +42,8 @@ def main():
 	parser.add_option("-s","--subfolder",type='string',help="Folder to place object in");	
 	parser.add_option("--md5",action='store_true',help="Create md5 checksums");
 	parser.add_option("--sha256",action='store_true',help="Create sha256 checksums");
-	parser.add_option("-m","--metadata",action='append',type='string',help="Key/values metadata to add to object");
+	parser.add_option("-m","--metadata",action='append',type='string',help="Key/values metadata to add to object",metavar="KEY:VALUE");
+	parser.add_option("--overwrite",action='store_true',help="Force overwrite of existing object");
 	parser.add_option("--dry-run",action='store_true',help="Dry Run. Disable uploads and emails");
 	(options,args) = parser.parse_args()
 
@@ -173,7 +174,23 @@ def main():
 		#Upload Files
 		for i in posting_files:
 			functions.log("File: " + posting_files[i]['full_path'] + " Uploading")
-			s3_connection.upload_file(posting_files[i]['full_path'],parameters['subfolder'])
+			creation_date = time.ctime(os.path.getctime(posting_files[i]['full_path']))
+
+			file_metadata = {
+			   "original_location" : posting_files[i]['full_path'],
+			   "creation_date" : creation_date, 
+			}
+			if ('md5sum' in posting_files[i]):
+				file_metadata['md5sum'] = posting_files[i]['md5sum']
+			if ('sha256sum' in posting_files[i]):
+				file_metadata['sha256sum'] = posting_files[i]['sha256sum']
+
+			file_metadata['emails'] = ",".join(options.email)
+			for add_data in options.metadata:
+				key,value = add_data.split(":")
+				file_metadata[key] = value
+
+			s3_connection.upload_file(posting_files[i]['full_path'],parameters['subfolder'],file_metadata)
 			print();
 			basename = os.path.basename(posting_files[i]['file'])
 			if (parameters['subfolder'] != None):
