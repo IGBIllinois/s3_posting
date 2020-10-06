@@ -2,6 +2,8 @@
 
 import sys
 import os.path, time
+import socket
+import getpass
 import glob
 from optparse import OptionParser
 
@@ -23,6 +25,7 @@ parameters['subfolder'] = None
 
 posting_files = {}
 emails = {}
+reserved_metadata = ['original_location','hostname','creation_date','emails','username']
 
 def main():
 	
@@ -140,7 +143,15 @@ def main():
 	if (options.sha256):
 		parameters['sha256sum'] = True
 		functions.log("sha256 checksum enabled")
-	
+
+	#Verify Metadata -m/--meta	
+	if (options.metadata != None):
+		for in_metadata in options.metadata:
+			key,value = in_metadata.split(":")
+			if key in reserved_metadata:
+				parser.error("Can not specify '" + key + "' with -m/--meta.  This is a reserved metadata key")
+				quit(1)
+
 	#Calculate md5 checksums
 	if (parameters['md5sum']):
 		functions.log("Calculating md5 checksums")
@@ -178,7 +189,10 @@ def main():
 
 			file_metadata = {
 			   "original_location" : posting_files[i]['full_path'],
-			   "creation_date" : creation_date, 
+			   "hostname" : socket.gethostname(),
+			   "creation_date" : creation_date,
+			   "username" : getpass.getuser(),
+ 
 			}
 			if ('md5sum' in posting_files[i]):
 				file_metadata['md5sum'] = posting_files[i]['md5sum']
