@@ -111,7 +111,7 @@ def main():
 	if ((options.email == None) and my_profile.get_email_enabled()):
 		parser.error("Must specifiy an email address with --email")
 		quit(1)
-	else:
+	elif ((options.email != None) and my_profile.get_email_enabled()):
 		k = 0
 		for i in options.email:
 			if (not functions.validate_email(i)):
@@ -204,7 +204,9 @@ def main():
 			if ('sha256sum' in posting_files[i]):
 				file_metadata['sha256sum'] = posting_files[i]['sha256sum']
 
-			file_metadata['emails'] = ",".join(options.email)
+			if (my_profile.get_email_enabled()):
+				file_metadata['emails'] = ",".join(options.email)
+
 			file_metadata.update(global_metadata)
 
 			s3_connection.upload_file(posting_files[i]['full_path'],parameters['subfolder'],file_metadata)
@@ -216,7 +218,7 @@ def main():
 				full_path = basename
 		
 		
-		if (my_profile.get_seperate_emails()):
+		if (my_profile.get_email_enabled() and my_profile.get_seperate_emails()):
 			k = 0
 			for i in options.email:
 				emails[k] = {}
@@ -231,13 +233,13 @@ def main():
 						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(s3_path,my_profile.get_url_expires(),i)
 						functions.log("URL: " + emails[k]['files'][uploaded_files]['url'])
 				k += 1
-		else:
+		elif (my_profile.get_email_enabled() and not my_profile.get_seperate_emails()):
 			emails[0] = {}
 			emails[0]['to'] = options.email
 			emails[0]['files'] = posting_files
 			if (my_profile.get_url_expires() > 0):
 				for k in emails[0]['files']:
-					s3_path = emails[k]['files'][uploaded_files]['file']
+					s3_path = emails[0]['files'][k]['file']
 					if (parameters['subfolder']):
                                                         s3_path = parameters['subfolder'] + "/" + s3_path
 					emails[0]['files'][k]['url'] = s3_connection.get_url(s3_path,my_profile.get_url_expires())
