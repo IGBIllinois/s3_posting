@@ -25,7 +25,8 @@ parameters['subfolder'] = None
 
 posting_files = {}
 emails = {}
-reserved_metadata = ['original_location','hostname','creation_date','emails','username']
+reserved_metadata = ['original_location','hostname','creation_date','emails','username','md5sum','sha256sum']
+global_metadata = {}
 
 def main():
 	
@@ -151,6 +152,10 @@ def main():
 			if key in reserved_metadata:
 				parser.error("Can not specify '" + key + "' with -m/--meta.  This is a reserved metadata key")
 				quit(1)
+			if key in global_metadata:
+				parser.error("Duplicate metadata for key '" + key + "'")
+			else:	
+				global_metadata[key] = value
 
 	#Calculate md5 checksums
 	if (parameters['md5sum']):
@@ -200,9 +205,7 @@ def main():
 				file_metadata['sha256sum'] = posting_files[i]['sha256sum']
 
 			file_metadata['emails'] = ",".join(options.email)
-			for add_data in options.metadata:
-				key,value = add_data.split(":")
-				file_metadata[key] = value
+			file_metadata.update(global_metadata)
 
 			s3_connection.upload_file(posting_files[i]['full_path'],parameters['subfolder'],file_metadata)
 			print();
