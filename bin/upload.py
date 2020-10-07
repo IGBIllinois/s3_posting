@@ -148,6 +148,9 @@ def main():
 	#Verify Metadata -m/--meta	
 	if (options.metadata != None):
 		for in_metadata in options.metadata:
+			if ":" not in in_metadata:
+				parser.error("Invalid metadata format for '" + in_metadata + "'.  Must be KEY:VALUE")
+				quit(1)
 			key,value = in_metadata.split(":")
 			if key in reserved_metadata:
 				parser.error("Can not specify '" + key + "' with -m/--meta.  This is a reserved metadata key")
