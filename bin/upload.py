@@ -2,11 +2,8 @@
 
 import sys
 import os.path, time
-<<<<<<< HEAD
-=======
 import socket
 import getpass
->>>>>>> beta
 import glob
 from optparse import OptionParser
 
@@ -200,31 +197,20 @@ def main():
 
 			file_metadata = {
 			   "original_location" : posting_files[i]['full_path'],
-<<<<<<< HEAD
-			   "creation_date" : creation_date, 
-=======
 			   "hostname" : socket.gethostname(),
 			   "creation_date" : creation_date,
 			   "username" : getpass.getuser(),
  
->>>>>>> beta
 			}
 			if ('md5sum' in posting_files[i]):
 				file_metadata['md5sum'] = posting_files[i]['md5sum']
 			if ('sha256sum' in posting_files[i]):
 				file_metadata['sha256sum'] = posting_files[i]['sha256sum']
 
-<<<<<<< HEAD
-			file_metadata['emails'] = ",".join(options.email)
-			for add_data in options.metadata:
-				key,value = add_data.split(":")
-				file_metadata[key] = value
-=======
 			if (my_profile.get_email_enabled()):
 				file_metadata['emails'] = ",".join(options.email)
 
 			file_metadata.update(global_metadata)
->>>>>>> beta
 
 			s3_connection.upload_file(posting_files[i]['full_path'],parameters['subfolder'],file_metadata)
 			print();
@@ -273,3 +259,4 @@ def main():
 
 if __name__ == '__main__':
 	main()
+
