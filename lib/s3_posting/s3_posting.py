@@ -42,7 +42,7 @@ class s3_posting:
         	response = self._connection.list_buckets()
 	        buckets = [bucket['Name'] for bucket in response['Buckets']]
         	if self.__profile.get_bucket() in buckets:
-	                return True
+	        	return True
         	return False
 
 	def upload_file(self,file_path,directory,metadata = {}):

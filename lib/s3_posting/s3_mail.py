@@ -7,6 +7,7 @@ from s3_posting import functions
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from jinja2 import Environment, FileSystemLoader
+from email import utils
 
 class s3_mail:
 
@@ -53,11 +54,12 @@ class s3_mail:
 		msg = MIMEMultipart('alternative')
 		msg['Subject'] = self.__profile.get_subject()
 		msg['From'] = self.__profile.get_from_email()
+		msg['Date'] = utils.formatdate(localtime=True)
 		to_emails = self.__email['to']
 		msg['To'] = ','.join([str(i) for i in self.__email['to']])
-		if (self.__profile.get_cc_emails() != None):
+		if (len(self.__profile.get_cc_emails()) > 0):
 			msg['Cc'] = ',' .join(self.__profile.get_cc_emails())
-		if (self.__profile.get_bcc_emails() != None):
+		if (len(self.__profile.get_bcc_emails()) > 0):
 			msg['Bcc'] = ',' .join(self.__profile.get_bcc_emails())
 		if (self.__profile.get_reply_to() != None):
 			msg['Reply-To'] = self.__profile.get_reply_to()

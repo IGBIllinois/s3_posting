@@ -2,6 +2,11 @@
 
 import sys
 import os.path, time
+<<<<<<< HEAD
+=======
+import socket
+import getpass
+>>>>>>> beta
 import glob
 from optparse import OptionParser
 
@@ -23,6 +28,8 @@ parameters['subfolder'] = None
 
 posting_files = {}
 emails = {}
+reserved_metadata = ['original_location','hostname','creation_date','emails','username','md5sum','sha256sum']
+global_metadata = {}
 
 def main():
 	
@@ -107,7 +114,7 @@ def main():
 	if ((options.email == None) and my_profile.get_email_enabled()):
 		parser.error("Must specifiy an email address with --email")
 		quit(1)
-	else:
+	elif ((options.email != None) and my_profile.get_email_enabled()):
 		k = 0
 		for i in options.email:
 			if (not functions.validate_email(i)):
@@ -140,7 +147,22 @@ def main():
 	if (options.sha256):
 		parameters['sha256sum'] = True
 		functions.log("sha256 checksum enabled")
-	
+
+	#Verify Metadata -m/--meta	
+	if (options.metadata != None):
+		for in_metadata in options.metadata:
+			if ":" not in in_metadata:
+				parser.error("Invalid metadata format for '" + in_metadata + "'.  Must be KEY:VALUE")
+				quit(1)
+			key,value = in_metadata.split(":")
+			if key in reserved_metadata:
+				parser.error("Can not specify '" + key + "' with -m/--meta.  This is a reserved metadata key")
+				quit(1)
+			if key in global_metadata:
+				parser.error("Duplicate metadata for key '" + key + "'")
+			else:	
+				global_metadata[key] = value
+
 	#Calculate md5 checksums
 	if (parameters['md5sum']):
 		functions.log("Calculating md5 checksums")
@@ -178,17 +200,31 @@ def main():
 
 			file_metadata = {
 			   "original_location" : posting_files[i]['full_path'],
+<<<<<<< HEAD
 			   "creation_date" : creation_date, 
+=======
+			   "hostname" : socket.gethostname(),
+			   "creation_date" : creation_date,
+			   "username" : getpass.getuser(),
+ 
+>>>>>>> beta
 			}
 			if ('md5sum' in posting_files[i]):
 				file_metadata['md5sum'] = posting_files[i]['md5sum']
 			if ('sha256sum' in posting_files[i]):
 				file_metadata['sha256sum'] = posting_files[i]['sha256sum']
 
+<<<<<<< HEAD
 			file_metadata['emails'] = ",".join(options.email)
 			for add_data in options.metadata:
 				key,value = add_data.split(":")
 				file_metadata[key] = value
+=======
+			if (my_profile.get_email_enabled()):
+				file_metadata['emails'] = ",".join(options.email)
+
+			file_metadata.update(global_metadata)
+>>>>>>> beta
 
 			s3_connection.upload_file(posting_files[i]['full_path'],parameters['subfolder'],file_metadata)
 			print();
@@ -199,7 +235,7 @@ def main():
 				full_path = basename
 		
 		
-		if (my_profile.get_seperate_emails()):
+		if (my_profile.get_email_enabled() and my_profile.get_seperate_emails()):
 			k = 0
 			for i in options.email:
 				emails[k] = {}
@@ -214,13 +250,13 @@ def main():
 						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(s3_path,my_profile.get_url_expires(),i)
 						functions.log("URL: " + emails[k]['files'][uploaded_files]['url'])
 				k += 1
-		else:
+		elif (my_profile.get_email_enabled() and not my_profile.get_seperate_emails()):
 			emails[0] = {}
 			emails[0]['to'] = options.email
 			emails[0]['files'] = posting_files
 			if (my_profile.get_url_expires() > 0):
 				for k in emails[0]['files']:
-					s3_path = emails[k]['files'][uploaded_files]['file']
+					s3_path = emails[0]['files'][k]['file']
 					if (parameters['subfolder']):
                                                         s3_path = parameters['subfolder'] + "/" + s3_path
 					emails[0]['files'][k]['url'] = s3_connection.get_url(s3_path,my_profile.get_url_expires())
