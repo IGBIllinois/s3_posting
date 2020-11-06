@@ -69,11 +69,30 @@ class s3_mail:
 		msg.attach(part2)
 
 		try:
-			s = smtplib.SMTP(self.__profile.get_smtp_server())
+			s = None
+			if (self.__profile.get_email_encryption() == 'none'):
+				s = smtplib.SMTP(self.__profile.get_smtp_server(),self.__profile.get_email_port())
+				s.ehlo()
+			if (self.__profile.get_email_encryption() == 'tls'):				
+				s = smtplib.SMTP(self.__profile.get_smtp_server(),self.__profile.get_email_port())
+				s.ehlo()
+				s.starttls()
+				s.ehlo()
+			elif (self.__profile.get_email_encryption() == 'ssl'):
+				s = smtplib.SMTP_SSL(self.__profile.get_smtp_server(),self.__profile.get_email_port())
+				s.ehlo()
+		
+			if ((self.__profile.get_email_username() != None) and (self.__profile.get_email_password() != None)):
+				s.login(self.__profile.get_email_username(),self.__profile.get_email_password())
+
 			envelop = self.__email['to'] + self.__profile.get_cc_emails() + self.__profile.get_bcc_emails()
 			result = s.sendmail(self.__profile.get_from_email(),envelop,msg.as_string())
 			s.quit
 			functions.log('Email successfully sent to ' + ', ' .join(self.__email['to']))
-		except (OSError,smtplib.SMTPException) as e:
-			functions.log('Error sending email')
+		except (smtplib.SMTPAuthenticationError,smtplib.SMTPException) as e:
+			function.log('Error sending email: ' + e.message)
 			sys.exit()
+		except (OSError) as e:
+			functions.log('Error sending email: ' + str(e))
+			sys.exit()
+

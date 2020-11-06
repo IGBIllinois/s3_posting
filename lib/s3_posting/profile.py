@@ -23,7 +23,11 @@ class profile:
 	__bcc_emails = []
 	__reply_to = ""
 	__subject = ""
-	__seperate_emails = False	
+	__seperate_emails = False
+	__email_username = None
+	__email_password = None
+	__email_port = 25
+	__email_encryption = "none"	
 	__profile_schema = os.path.dirname(__file__) + "/profile_schema.json"
 
 ##########Public Functions#########
@@ -97,6 +101,18 @@ class profile:
 	def get_seperate_emails(self):
 		return self.__seperate_emails
 
+	def get_email_username(self):
+		return self.__email_username
+
+	def get_email_password(self):
+		return self.__email_password
+
+	def get_email_port(self):
+		return self.__email_port
+
+	def get_email_encryption(self):
+		return self.__email_encryption
+
 	def print_profile(self):
 		print(yaml.dump(self.__cfg))
 	
@@ -132,7 +148,15 @@ class profile:
 			self.__subject = self.__cfg['email']['subject']
 		if ("seperate_emails" in self.__cfg['email']):
 			self.__seperate_emails = self.__cfg['email']['seperate_emails']
-
+		if ("username" in self.__cfg['email']):
+			self.__email_username = self.__cfg['email']['username']
+		if ("password" in self.__cfg['email']):
+			self.__email_password = self.__cfg['email']['password']
+		if ("port" in self.__cfg['email']):
+			self.__email_port = self.__cfg['email']['port']
+		if ("encryption" in self.__cfg['email']):
+			self.__email_encryption = self.__cfg['email']['encryption']	
+	
 	def __validate_config(in_cfg):
 		success = True
 		if (('region' not in in_cfg['aws']) or (in_cfg['aws']['region'] == None)):

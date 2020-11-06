@@ -29,10 +29,19 @@
 			"bcc_emails": { "type": ["array","null"] },
 			"reply_to": { "type": ["string","null"] },
 			"subject": { "type": ["string","null"] },
+			"username": { "type": ["string","null"] },
+			"password": { "type": ["string","null"] },
+			"port":	{ "type": ["integer","null"] },
+			"encryption": { "type": ["string","null"],
+				"enum": ["none","tls","ssl"]
+				},
 			"seperate_emails": { "type": ["boolean","null"] }
 		},
 		"additionalProperties": false,
-		"required": ["enable"]
+		"required": ["enable"],
+		"dependencies": {
+			"username": ["password"]
+		}
       	      }
        },
 	"additionalProperties": false,

@@ -18,5 +18,9 @@ email:
     bcc_emails: [] 
     reply_to: 
     subject:
+    username:
+    password:
+    port:
+    encryption:
     #Send seperate emails with unique presigned url for each email address Default: false
     seperate_emails: false

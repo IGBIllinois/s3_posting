@@ -12,7 +12,7 @@ from s3_posting import functions
 class ProgressPercentage(object):
     def __init__(self, filename):
         self._filename = filename
-        self._size = float(os.path.getsize(filename))
+        self._size = int(os.path.getsize(filename))
         self._seen_so_far = 0
         self._lock = threading.Lock()
     def __call__(self, bytes_amount):
