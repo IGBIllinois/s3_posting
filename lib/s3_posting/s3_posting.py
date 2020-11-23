@@ -52,6 +52,7 @@ class s3_posting:
 		else:
 			full_path = basename
 		try:
+			
 			response = self._connection.upload_file(file_path,self.__profile.get_bucket(),full_path,
 								Callback=ProgressPercentage(file_path),
 								ExtraArgs={'StorageClass': self.__profile.get_storage_class(), 'Metadata': metadata})
@@ -64,9 +65,9 @@ class s3_posting:
 			sys.exit('Aborting')
 		return True
 
-	def get_url(self,filename,url_expires=0,custom_param=''):
-		if (url_expires != 0):
-	                seconds = url_expires * 24 * 60 * 60
+	def get_url(self,filename,custom_param=''):
+		if (self.__profile.get_url_expires() != 0):
+	                seconds = self.__profile.get_url_expires() * 24 * 60 * 60
 		else:
 			seconds = 7 * 24 * 60 * 60
 

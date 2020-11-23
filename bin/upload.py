@@ -19,6 +19,7 @@ from s3_posting import profile
 parameters = {}
 parameters['bucket'] = ""
 parameters['overwrite'] = False
+parameters['no-progressbar'] = False
 parameters['md5sum'] = False
 parameters['sha256sum'] = False
 parameters['subfolder'] = None
@@ -48,6 +49,7 @@ def main():
 	parser.add_option("--sha256",action='store_true',help="Create sha256 checksums");
 	parser.add_option("-m","--metadata",action='append',type='string',help="Key/values metadata to add to object",metavar="KEY:VALUE");
 	parser.add_option("--overwrite",action='store_true',help="Force overwrite of existing object");
+	parser.add_option("--no-progressbar",action='store_true',help="Disable upload progress bar");
 	parser.add_option("--dry-run",action='store_true',help="Dry Run. Disable uploads and emails");
 	(options,args) = parser.parse_args()
 
@@ -106,7 +108,11 @@ def main():
 	if (options.subfolder != None):
 		parameters['subfolder'] = options.subfolder
 		functions.log("Subfolder: " + parameters['subfolder'])
-		
+	
+	if (options.no_progressbar != None):
+		parameters['no-progressbar'] = True
+		functions.log("Disabling Progress Bar")
+
 	#Verify -email
 	if ((options.email == None) and my_profile.get_email_enabled()):
 		parser.error("Must specifiy an email address with --email")
@@ -233,7 +239,7 @@ def main():
 						s3_path = emails[k]['files'][uploaded_files]['file']
 						if (parameters['subfolder']):
 							s3_path = parameters['subfolder'] + "/" + s3_path
-						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(s3_path,my_profile.get_url_expires(),i)
+						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(s3_path,i)
 						functions.log("URL: " + emails[k]['files'][uploaded_files]['url'])
 				k += 1
 		elif (my_profile.get_email_enabled() and not my_profile.get_seperate_emails()):
@@ -245,7 +251,7 @@ def main():
 					s3_path = emails[0]['files'][k]['file']
 					if (parameters['subfolder']):
                                                         s3_path = parameters['subfolder'] + "/" + s3_path
-					emails[0]['files'][k]['url'] = s3_connection.get_url(s3_path,my_profile.get_url_expires())
+					emails[0]['files'][k]['url'] = s3_connection.get_url(s3_path)
 					functions.log("URL:" + emails[0]['files'][k]['url'])
 			
 		#Send Email
