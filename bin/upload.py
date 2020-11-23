@@ -219,7 +219,11 @@ def main():
 			
 			#Get file size
 			file_size = str(functions.get_filesize(posting_files[i]['full_path']))
-			posting_files[i]['size'] = file_size
+			if (file_size == "0.0"):
+				posting_files[i]['size'] = "<1"
+			else:
+				posting_files[i]['size'] = file_size
+
 			functions.log("File: " + posting_files[i]['full_path'] + " Size: " + file_size + " GB")
 			
 			#Upload file

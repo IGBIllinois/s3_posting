@@ -12,16 +12,13 @@ Total Number of Files: {{ files|length }}
 ---------------------------------------{% for key,item in files.items() %}
 File: {{ item.file }}  {{item.size }} GB{% endfor %}
 ---------------------------------------
-
 {% for key,item in files.items() %}
 File: {{item.file }}
-Size: {{item.size }} GB
 URL: {{ item.url }}
 {% if item.md5sum %}md5sum: {{ item.md5sum }} {% endif %}
 {% if item.sha256sum %}sha256sum: {{ item.sha256sum }}{% endif %}
 Download by command line: 
 curl -o {{ item.file }} -L "{{ item.url }}"
-
 ---------------------------------------
 {% endfor %}
 
