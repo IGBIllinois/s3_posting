@@ -218,7 +218,7 @@ def main():
 
 			file_metadata.update(global_metadata)
 
-			s3_connection.upload_file(posting_files[i]['full_path'],parameters['subfolder'],file_metadata)
+			s3_connection.upload_file(posting_files[i]['full_path'],file_metadata)
 			print();
 			basename = os.path.basename(posting_files[i]['file'])
 			if (parameters['subfolder'] != None):

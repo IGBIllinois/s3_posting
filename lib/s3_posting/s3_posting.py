@@ -45,10 +45,10 @@ class s3_posting:
 	        	return True
         	return False
 
-	def upload_file(self,file_path,directory,metadata = {}):
+	def upload_file(self,file_path,metadata = {}):
 		basename = os.path.basename(file_path);
-		if (directory != None):
-			full_path = directory + "/" + basename
+		if (self.__parameters['subfolder'] != None):
+			full_path = self.__parameters['subfolder'] + "/" + basename
 		else:
 			full_path = basename
 		try:
