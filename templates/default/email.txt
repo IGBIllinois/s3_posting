@@ -6,17 +6,15 @@ The links (URLs) will expire on {{ expire_date }}
 Total Number of Files: {{ files|length }}
 {% for key,item in files.items() %}
 File: {{item.file }}
+Size: {{item.size }} GB
 URL: {{ item.url }}
 {% if item.md5sum %}md5sum: {{ item.md5sum }} {% endif %}
 {% if item.sha256sum %}sha256sum: {{ item.sha256sum }}{% endif %}
+Download by command line:
+curl -o {{ item.file }} "{{ item.url }}"
+
 ---------------------------------------
 {% endfor %}
-To download the file via the command line:
-curl -o FILENAME "https://....."
-
-or
-
-wget -O FILENAME "https://...."
 
 For questions about this posting, you may reply to this email and must cc: aghernan@illinois.edu and clwright@illinois.edu
 

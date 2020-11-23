@@ -1,13 +1,14 @@
-<style>
+<html>
+<head>
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
+<style type='text/css' media="screen">
 {% include css %}
-body {
-	font-size: 12px;
-	line-height: 1;
-}
 </style>
+</head>
+<body style='padding-top: 20px;'>
 <div class='container-fluid'>
 <div class='col-sm-12 col-md-12 col-lg-12 col-xl-12'>
-<p><br>Hi,</p>
+<p>Hi,</p>
 <p>Your sequencing results from the DNA Sequencing lab at UIUC are available for download.
 <br>Below is the list of files and the link to download them.
 <br>The links (URLs) will expire on {{ expire_date }}
@@ -15,6 +16,7 @@ body {
 </p>
 {% for key,item in files.items() %}
 <br>File: {{item.file }}
+<br>Size: {{item.size }} GB
 <br>URL: <a href=' {{ item.url }}'>{{ item.url }} </a>
 {% if item.md5sum %}
 	<br>md5sum: {{ item.md5sum }}
@@ -22,13 +24,9 @@ body {
 {% if item.sha256sum %}
         <br>sha256sum: {{ item.sha256sum }}
 {% endif %}
-<div class='alert' role='alert'>
-<p class='text-monospace'>curl -o FILENAME "{{ item.url }}"</p>
-</div>
-<br>or
-<span class='border'>
-<p class='text-monospace'>wget -O FILENAME "{{ item.url }}"</p>
-</span>
+<br>Download by command line:
+<p><code class='text-monospace'>curl -o {{ item.file }} "{{ item.url }}"</code></p>
+<p><pre><code class='text-monospace'>curl -o {{ item.file }} "{{ item.url }}"</code></pre></p>
 <hr>
 {% endfor %}
 <p>For questions about this posting, you may reply to this email and must cc: aghernan@illinois.edu and clwright@illinois.edu</p>
@@ -37,3 +35,5 @@ body {
 <span class="badge badge-primary">Primary</span>
 </div>
 </div>
+</body>
+</html>

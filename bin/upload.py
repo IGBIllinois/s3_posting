@@ -198,7 +198,6 @@ def main():
 
 		#Upload Files
 		for i in posting_files:
-			functions.log("File: " + posting_files[i]['full_path'] + " Uploading")
 			creation_date = time.ctime(os.path.getctime(posting_files[i]['full_path']))
 
 			file_metadata = {
@@ -217,8 +216,16 @@ def main():
 				file_metadata['emails'] = ",".join(options.email)
 
 			file_metadata.update(global_metadata)
-
+			
+			#Get file size
+			file_size = str(functions.get_filesize(posting_files[i]['full_path']))
+			posting_files[i]['size'] = file_size
+			functions.log("File: " + posting_files[i]['full_path'] + " Size: " + file_size + " GB")
+			
+			#Upload file
+			functions.log("File: " + posting_files[i]['full_path'] + " Uploading")
 			s3_connection.upload_file(posting_files[i]['full_path'],file_metadata)
+			functions.log("File: " + posting_files[i]['full_path'] + " Finish Uploading")
 			print();
 			basename = os.path.basename(posting_files[i]['file'])
 			if (parameters['subfolder'] != None):

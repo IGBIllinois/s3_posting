@@ -61,3 +61,7 @@ def get_profiles(config_dir):
 			profiles.append(os.path.splitext(file)[0])
 	return ", ".join(profiles)
 
+def get_filesize(path):
+	statinfo = os.stat(path)
+	return round(statinfo.st_size / 1024 / 1024 / 1024,2)
+
