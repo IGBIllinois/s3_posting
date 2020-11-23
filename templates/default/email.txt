@@ -2,8 +2,8 @@ Hi,
 Your sequencing results from the DNA Sequencing lab at UIUC are available for download.
 There are two ways to download the files, through command line (recommended) or through a browser.
 
-1. Command line: copy either the entire curl or wget commands below, including the quotation marks, and past them on a command line. Downloading to a linux server is recommended. Files could be downloaded through a mac terminal or windows command line if there is sufficient space in the hard drive, or if downloading to an external hard drive.
-2. Browser: Firs make sure there is sufficient space in your hard drive. To save the file to an external hard drive, first go to your browser “Preferences” and set the Downloads location to your hard drive. Then click on the link below.
+1. Command line: Copy either the entire curl command below, including the quotation marks, and paste them on a command line. Downloading to a linux server is recommended. Files could be downloaded through a mac terminal or windows command line if there is sufficient space in the hard drive, or if downloading to an external hard drive.
+2. Browser: Firts make sure there is sufficient space in your hard drive. To save the file to an external hard drive, first go to your browser “Preferences” and set the Downloads location to your hard drive. Then click on the link below.
 
 Below is the list of files, their size and then the links to download each of them.
 The links (URLs) will expire on {{ expire_date }}
@@ -19,7 +19,7 @@ Size: {{item.size }} GB
 URL: {{ item.url }}
 {% if item.md5sum %}md5sum: {{ item.md5sum }} {% endif %}
 {% if item.sha256sum %}sha256sum: {{ item.sha256sum }}{% endif %}
-Download by command line:
+Download by command line: 
 curl -o {{ item.file }} -L "{{ item.url }}"
 
 ---------------------------------------

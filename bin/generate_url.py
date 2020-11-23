@@ -135,7 +135,7 @@ def main():
 						s3_path = emails[k]['files'][uploaded_files]['file']
 						if (parameters['subfolder']):
 							s3_path = parameters['subfolder'] + "/" + s3_path
-						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(s3_path,my_profile.get_url_expires(),i)
+						emails[k]['files'][uploaded_files]['url'] = s3_connection.get_url(s3_path,i)
 						functions.log("URL: " + emails[k]['files'][uploaded_files]['url'])
 				k += 1
 		else:
@@ -147,7 +147,7 @@ def main():
 					s3_path = emails[k]['files'][uploaded_files]['file']
 					if (parameters['subfolder']):
 						s3_path = parameters['subfolder'] + "/" + s3_path
-					emails[0]['files'][k]['url'] = s3_connection.get_url(s3_path,my_profile.get_url_expires())
+					emails[0]['files'][k]['url'] = s3_connection.get_url(s3_path)
 					functions.log("URL:" + emails[0]['files'][k]['url'])
 	
 		#Send Email
