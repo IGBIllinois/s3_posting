@@ -1,6 +1,5 @@
 <html>
 <head>
-<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
 <style type='text/css' media="screen">
 {% include css %}
 </style>
@@ -10,13 +9,20 @@
 <div class='col-sm-12 col-md-12 col-lg-12 col-xl-12'>
 <p>Hi,</p>
 <p>Your sequencing results from the DNA Sequencing lab at UIUC are available for download.
-<br>Below is the list of files and the link to download them.
+<br>There are two ways to download the files, through command line (recommended) or through a browser.</p>
+<ol>
+<li>Command line: copy the entire curl below, including the quotation marks, and past them on a command line. Downloading to a linux server is recommended. Files could be downloaded through a mac terminal or windows command line if there is sufficient space in the hard drive, or if downloading to an external hard drive.</li>
+<li>Browser: First make sure there is sufficient space in your hard drive. To save the file to an external hard drive, first go to your browser “Preferences” and set the Downloads location to your hard drive. Then click on the link below.</li>
+</ol>
+<p>Below is the list of files, their size and then the links to download each of them.
 <br>The links (URLs) will expire on {{ expire_date }}
-<br>Total Number of Files: {{ files|length }}
-</p>
+<br>Total Number of Files: {{ files|length }}</p>
+<hr>{% for key,item in files.items() %}
+<br>File: {{ item.file }}  {{item.size }} GB
+{% endfor %}
+<hr>
 {% for key,item in files.items() %}
 <br>File: {{item.file }}
-<br>Size: {{item.size }} GB
 <br>URL: <a href=' {{ item.url }}'>{{ item.url }} </a>
 {% if item.md5sum %}
 	<br>md5sum: {{ item.md5sum }}
@@ -25,14 +31,13 @@
         <br>sha256sum: {{ item.sha256sum }}
 {% endif %}
 <br>Download by command line:
-<p><code class='text-monospace'>curl -o {{ item.file }} "{{ item.url }}"</code></p>
-<p><pre><code class='text-monospace'>curl -o {{ item.file }} "{{ item.url }}"</code></pre></p>
+<p><code class='text-monospace'>curl -o {{ item.file }} -L "{{ item.url }}"</code></p>
+<p><pre><code class='text-monospace'>curl -o {{ item.file }} -L "{{ item.url }}"</code></pre></p>
 <hr>
 {% endfor %}
 <p>For questions about this posting, you may reply to this email and must cc: aghernan@illinois.edu and clwright@illinois.edu</p>
 <p>Sincerely,</p>
 <p>The DNA Sequencing Lab, University of Illinois at Urbana-Champaign</p>
-<span class="badge badge-primary">Primary</span>
 </div>
 </div>
 </body>
