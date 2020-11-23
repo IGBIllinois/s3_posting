@@ -1,10 +1,20 @@
-<html><head></head><body>
-<p>Hi,</p>
+<style>
+{% include css %}
+body {
+	font-size: 12px;
+	line-height: 1;
+}
+</style>
+<div class='container-fluid'>
+<div class='col-sm-12 col-md-12 col-lg-12 col-xl-12'>
+<p><br>Hi,</p>
 <p>Your sequencing results from the DNA Sequencing lab at UIUC are available for download.
 <br>Below is the list of files and the link to download them.
-<br>The links (URLs) will expire on {{ expire_date }}</p>
+<br>The links (URLs) will expire on {{ expire_date }}
+<br>Total Number of Files: {{ files|length }}
+</p>
 {% for key,item in files.items() %}
-<p>File: {{item.file }}
+<br>File: {{item.file }}
 <br>URL: <a href=' {{ item.url }}'>{{ item.url }} </a>
 {% if item.md5sum %}
 	<br>md5sum: {{ item.md5sum }}
@@ -12,14 +22,18 @@
 {% if item.sha256sum %}
         <br>sha256sum: {{ item.sha256sum }}
 {% endif %}
-</p>
+<div class='alert' role='alert'>
+<p class='text-monospace'>curl -o FILENAME "{{ item.url }}"</p>
+</div>
+<br>or
+<span class='border'>
+<p class='text-monospace'>wget -O FILENAME "{{ item.url }}"</p>
+</span>
 <hr>
 {% endfor %}
-<p>To download the file via the command line</p>
-<p>curl -o FILENAME "https://....."</p>
-<p>or</p>
-<p>wget -O FILENAME "https://....."</p>
 <p>For questions about this posting, you may reply to this email and must cc: aghernan@illinois.edu and clwright@illinois.edu</p>
 <p>Sincerely,</p>
 <p>The DNA Sequencing Lab, University of Illinois at Urbana-Champaign</p>
-</body></html>
+<span class="badge badge-primary">Primary</span>
+</div>
+</div>

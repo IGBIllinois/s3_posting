@@ -55,10 +55,13 @@ class s3_posting:
 			response = self._connection.upload_file(file_path,self.__profile.get_bucket(),full_path,
 								Callback=ProgressPercentage(file_path),
 								ExtraArgs={'StorageClass': self.__profile.get_storage_class(), 'Metadata': metadata})
+		except OSError as e:
+			functions.log("Error uploading file " + file_path + ", Error: " + str(error))
+			sys.exit('Aborting')
 		except botocore.exceptions.ClientError as e:
-        	        error_code = int(e.response['Error']['Code'])
-                	functions.log("Error uploading file " + file_path + ", Error Code: " + str(error_code))
-	                return error_code
+			error_code = int(e.response['Error']['Code'])
+			functions.log("Error uploading file " + file_path + ", Error Code: " + str(error_code))
+			sys.exit('Aborting')
 		return True
 
 	def get_url(self,filename,url_expires=0,custom_param=''):

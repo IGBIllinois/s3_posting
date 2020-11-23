@@ -32,7 +32,7 @@ class s3_mail:
 		if (os.path.exists("../../templates/custom/" + self.__template_html)):
 			template = self.template_env.get_template('custom/' + self.__template_html)
 		try:
-			output = template.render(files=self.__email['files'],expire_date=self.__formatted_expired_date)
+			output = template.render(files=self.__email['files'],expire_date=self.__formatted_expired_date,css=self.get_bootstrap_css())
 		except TemplateError as e:
 			sys.exit('Syntax Error in email template ' + self.__template_html)
 
@@ -49,6 +49,9 @@ class s3_mail:
 			sys.exit('Syntax Error in email template ' + self.__template_txt)
 
 		return output
+
+	def get_bootstrap_css(self):
+		return "default/bootstrap.min.css"
 
 	def send_email(self):
 		msg = MIMEMultipart('alternative')

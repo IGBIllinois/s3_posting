@@ -3,7 +3,7 @@ Hi,
 Your sequencing results from the DNA Sequencing lab at UIUC are available for download.
 Below is the list of files and the link to download them.
 The links (URLs) will expire on {{ expire_date }}
-
+Total Number of Files: {{ files|length }}
 {% for key,item in files.items() %}
 File: {{item.file }}
 URL: {{ item.url }}
