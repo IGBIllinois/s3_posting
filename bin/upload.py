@@ -221,11 +221,11 @@ def main():
 			file_size = str(functions.get_filesize(posting_files[i]['full_path']))
 			if (file_size == "0.0"):
 				posting_files[i]['size'] = "<1"
+				functions.log("File: " + posting_files[i]['full_path'] + " Size: <1 GB")
 			else:
 				posting_files[i]['size'] = file_size
+				functions.log("File: " + posting_files[i]['full_path'] + " Size: " + file_size + " GB")
 
-			functions.log("File: " + posting_files[i]['full_path'] + " Size: " + file_size + " GB")
-			
 			#Upload file
 			functions.log("File: " + posting_files[i]['full_path'] + " Uploading")
 			s3_connection.upload_file(posting_files[i]['full_path'],file_metadata)
