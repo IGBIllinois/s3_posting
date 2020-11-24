@@ -17,7 +17,7 @@ File: {{item.file }}
 URL: {{ item.url }}
 {% if item.md5sum %}md5sum: {{ item.md5sum }} {% endif %}
 {% if item.sha256sum %}sha256sum: {{ item.sha256sum }}{% endif %}
-Download by command line: 
+Download by command line (copy entire command, including the quotation marks): 
 curl -o {{ item.file }} -L "{{ item.url }}"
 ---------------------------------------
 {% endfor %}

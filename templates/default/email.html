@@ -34,7 +34,7 @@ File: <span class='text-danger'>{{ item.file }}</span>&nbsp;&nbsp;&nbsp;&nbsp;{{
         <br>sha256sum: {{ item.sha256sum }}
 {% endif %}
 <br>
-<br>Download by command line:
+<br>Download by command line (copy entire command, including the quotation marks):
 <br><code class='text-danger'>curl -o {{ item.file }} -L "{{ item.url }}"</code>
 <hr>
 {% endfor %}
