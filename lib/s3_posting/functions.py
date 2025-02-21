@@ -7,6 +7,7 @@ import validators
 
 from s3_posting import __version__
 from s3_posting import __website__
+from s3_posting import __maxfilesize__
 
 def get_version():
 	return __version__
@@ -65,3 +66,5 @@ def get_filesize(path):
 	statinfo = os.stat(path)
 	return round(statinfo.st_size / 1024 / 1024 / 1024,2)
 
+def get_maxfilesize():
+    return __maxfilesize__
