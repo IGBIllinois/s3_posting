@@ -106,7 +106,10 @@ class s3_posting:
 	def create_directory(self,directory):
 		if (directory != None):
 			try:
-				response = self._connection.put_object(Bucket=self.__profile.get_bucket(),Key=directory + "/")
+				response = self._connection.put_object(Bucket=self.__profile.get_bucket(),
+                        Body="",
+                        Key=directory + "/"
+                        )
 				return True
 			except botocore.exceptions.ClientError as e:
 				error_code = int(e.response['Error']['Code'])

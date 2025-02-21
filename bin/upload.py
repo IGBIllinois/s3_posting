@@ -140,7 +140,7 @@ def main():
 	elif ((options.bucket == None) and my_profile.get_bucket() != None):
 		parameters['bucket'] = my_profile.get_bucket()
 	else:
-		parameters['bucket'] = options.bucket
+		parameters['bucket'] = " " . join(options.bucket)
 
 	functions.log("Bucket: " + parameters['bucket'])
 	
