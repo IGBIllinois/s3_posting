@@ -25,4 +25,8 @@ pip install -r requirements.txt
 How to configure the profiles is explained at [docs/config.md](docs/config.md)
 
 ## Usage
+Activate Python Virtual Environment
+```
+source .env/bin/activate
+```
 How to use the program is explained at [docs/usage.md](docs/usage.md)
